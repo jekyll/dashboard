@@ -10,6 +10,14 @@ type templateInfo struct {
 
 var (
 	indexTmpl = template.Must(template.New("index.html").Parse(`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+</head>
+<body>
+
 <table>
   <caption>Jekyll At-a-Glance Dashboard</caption>
   <thead>
@@ -49,5 +57,8 @@ var (
 <div>
 	<strong>Commits are as of this week. Issues and pull requests are total open.</strong>
 </div>
+
+</body>
+</html>
 `))
 )
