@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sync"
 )
 
@@ -87,10 +86,8 @@ func getAllProjects() []*Project {
 	var wg sync.WaitGroup
 	for _, p := range defaultProjects {
 		wg.Add(1)
-		log.Println("fetching:", p)
 		go func(project *Project) {
 			project.fetch()
-			log.Println("just fetched:", project)
 			wg.Done()
 		}(p)
 	}
