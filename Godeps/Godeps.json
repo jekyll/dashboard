@@ -2,6 +2,7 @@
 	"ImportPath": ".",
 	"GoVersion": "go1.5",
 	"Packages": [
+		".",
 		"goji.io",
 		"golang.org/x/net/context"
 	],
