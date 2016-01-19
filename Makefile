@@ -4,7 +4,7 @@ deps:
 	go get github.com/tools/godep
 
 build: deps
-	godep go build
+	godep go build ./...
 
 test: deps
-	godep go test
+	godep go test ./...

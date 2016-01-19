@@ -1,4 +1,4 @@
-package main
+package dashboard
 
 import (
 	"encoding/json"
@@ -20,7 +20,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	indexTmpl.Execute(w, templateInfo{Projects: getAllProjects()})
 }
 
-func main() {
+func Listen() {
 	mux := goji.NewMux()
 	mux.HandleFuncC(pat.Get("/:name.json"), show)
 	mux.HandleFunc(pat.Get("/"), index)
