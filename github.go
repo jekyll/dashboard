@@ -14,10 +14,11 @@ const accessTokenEnvVar = "GITHUB_ACCESS_TOKEN"
 var githubClient *gh.Client
 
 type GitHub struct {
-	CommitsThisWeek         int
-	OpenPRs                 int
-	OpenIssues              int
-	CommitsSinceLastRelease int
+	CommitsThisWeek           int    `json:"commits_this_week"`
+	OpenPRs                   int    `json:"open_prs"`
+	OpenIssues                int    `json:"open_issues"`
+	CommitsSinceLatestRelease int    `json:"commits_since_latest_release"`
+	LatestReleaseTag          string `json"latest_release_tag"`
 }
 
 func init() {
@@ -54,11 +55,13 @@ func github(nwo string) chan *GitHub {
 		owner := pieces[0]
 		repo := pieces[1]
 
+		commits, tag := commitsSinceLatestRelease(owner, repo)
 		githubChan <- &GitHub{
-			CommitsThisWeek:         commitsThisWeek(owner, repo),
-			OpenPRs:                 openPRs(nwo),
-			OpenIssues:              openIssues(owner, repo),
-			CommitsSinceLastRelease: commitsSinceLatestRelease(owner, repo),
+			CommitsThisWeek:           commitsThisWeek(owner, repo),
+			OpenPRs:                   openPRs(nwo),
+			OpenIssues:                openIssues(owner, repo),
+			CommitsSinceLatestRelease: commits,
+			LatestReleaseTag:          tag,
 		}
 	}()
 
@@ -96,14 +99,14 @@ func commitsThisWeek(owner, repo string) int {
 		log.Printf("error fetching commits this week for %s/%s: no results", owner, repo)
 		return -1
 	}
-	return *activities[0].Total
+	return *activities[len(activities)-1].Total
 }
 
-func commitsSinceLatestRelease(owner, repo string) int {
+func commitsSinceLatestRelease(owner, repo string) (int, string) {
 	release, _, err := githubClient.Repositories.GetLatestRelease(owner, repo)
 	if err != nil {
 		log.Printf("error fetching commits since latest release for %s/%s: %v", owner, repo, err)
-		return -1
+		return -1, ""
 	}
 	comparison, _, err := githubClient.Repositories.CompareCommits(
 		owner, repo,
@@ -111,7 +114,7 @@ func commitsSinceLatestRelease(owner, repo string) int {
 	)
 	if err != nil {
 		log.Printf("error fetching commit comparison for %s...master for %s/%s: %v", *release.TagName, owner, repo, err)
-		return -1
+		return -1, *release.TagName
 	}
-	return *comparison.TotalCommits
+	return *comparison.TotalCommits, *release.TagName
 }

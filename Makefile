@@ -1,4 +1,4 @@
-all: build test
+all: build test install
 
 deps:
 	go get github.com/tools/godep
@@ -13,3 +13,6 @@ build: deps
 
 test: deps
 	godep go test ./...
+
+install: deps
+	godep install ./...
