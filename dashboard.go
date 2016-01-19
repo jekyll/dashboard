@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jekyll/dashboard/Godeps/_workspace/src/goji.io"
-	"github.com/jekyll/dashboard/Godeps/_workspace/src/goji.io/pat"
-	"github.com/jekyll/dashboard/Godeps/_workspace/src/golang.org/x/net/context"
+	"goji.io"
+	"goji.io/pat"
+	"golang.org/x/net/context"
 )
 
 func show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
