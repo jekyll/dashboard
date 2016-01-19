@@ -1,1 +1,1 @@
-web: dashboard
+web: jekyll-dashboard
