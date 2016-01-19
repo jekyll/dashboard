@@ -24,9 +24,9 @@ var (
 		makeProject("classifier-reborn", "jekyll/classifier-reborn", "master", "classifier-reborn"),
 		makeProject("jekyll-sass-converter", "jekyll/jekyll-sass-converter", "master", "jekyll-sass-converter"),
 		makeProject("jekyll-textile-converter", "jekyll/jekyll-textile-converter", "master", "jekyll-textile-converter"),
-		makeProject("plugins.jekyllrb", "jekyll/plugins", "gh-pages", ""),
 		makeProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
 		makeProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
+		makeProject("plugins.jekyllrb", "jekyll/plugins", "gh-pages", ""),
 		makeProject("jekyll docker", "jekyll/docker", "", ""),
 	}
 )
