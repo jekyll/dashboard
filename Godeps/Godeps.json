@@ -1,9 +1,6 @@
 {
 	"ImportPath": "github.com/jekyll/dashboard",
 	"GoVersion": "go1.5",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "goji.io",
