@@ -44,11 +44,11 @@ var (
   <td>{{if .Travis}}
     <a href="https://travis-ci.org/{{.Travis.Nwo}}/builds/{{.Travis.Branch.Id}}">{{.Travis.Branch.State}}</a>
   {{end}}</td>
-  <td>{{if .Gem}}{{.Gem.Downloads}}{{end}}</td>
-  <td>{{if .GitHub}}{{.GitHub.CommitsThisWeek}}{{end}}</td>
-  <td>{{if .GitHub}}{{.GitHub.OpenPRs}}{{end}}</td>
-  <td>{{if .GitHub}}{{.GitHub.OpenIssues}}{{end}}</td>
-  <td>{{if .GitHub}}{{.GitHub.CommitsSinceLastRelease}}{{end}}</td>
+  <td>{{if .Gem}}{{.Gem.Downloads}}{{else}}no info{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.CommitsThisWeek}}{{else}}no info{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.OpenPRs}}{{else}}no info{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.OpenIssues}}{{else}}no info{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.CommitsSinceLastRelease}}{{else}}no info{{end}}</td>
 </tr>
 {{end}}
   </tbody>
