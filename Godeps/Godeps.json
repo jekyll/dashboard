@@ -1,0 +1,18 @@
+{
+	"ImportPath": ".",
+	"GoVersion": "",
+	"Packages": [
+		"goji.io",
+		"golang.org/x/net/context"
+	],
+	"Deps": [
+		{
+			"ImportPath": "goji.io",
+			"Rev": "9f8871d62a1b65a39bd029cd2c1bf457cbc1d2f6"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "72aa00c6241a8013dc9b040abb45f57edbe73945"
+		}
+	]
+}
