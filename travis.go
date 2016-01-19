@@ -1,6 +1,9 @@
 package dashboard
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type TravisReport struct {
 	Nwo    string       `json:"nwo"`
@@ -23,11 +26,13 @@ func travis(nwo, branch string) chan *TravisReport {
 
 		var info TravisReport
 		info.Nwo = nwo
-		err := get(fmt.Sprintf("https://api.travis-ci.org/repos/%s/branches/%s", nwo, branch), &info)
+
+		err := getRetry(5, fmt.Sprintf("https://api.travis-ci.org/repos/%s/branches/%s", nwo, branch), &info)
 		if err != nil {
 			travisChan <- nil
-			panic(fmt.Errorf("error fetching travis info for %s/%s: %v", nwo, branch, err))
+			log.Printf("==> error fetching travis info for %s/%s: %v", nwo, branch, err)
 		}
+
 		travisChan <- &info
 	}()
 

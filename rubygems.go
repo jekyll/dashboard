@@ -1,6 +1,9 @@
 package dashboard
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type RubyGem struct {
 	Name             string `json:"name"`
@@ -19,10 +22,10 @@ func rubygem(gem string) chan *RubyGem {
 			return
 		}
 		var info RubyGem
-		err := get(fmt.Sprintf("https://rubygems.org/api/v1/gems/%s.json", gem), &info)
+		err := getRetry(5, fmt.Sprintf("https://rubygems.org/api/v1/gems/%s.json", gem), &info)
 		if err != nil {
 			rubyGemChan <- nil
-			panic(fmt.Errorf("error fetching rubygems info for %s: %v", gem, err))
+			log.Printf("error fetching rubygems info for %s: %v", gem, err)
 		}
 		rubyGemChan <- &info
 	}()
