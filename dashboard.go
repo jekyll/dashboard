@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"goji.io"
 	"goji.io/pat"
@@ -23,5 +24,12 @@ func main() {
 	mux := goji.NewMux()
 	mux.HandleFuncC(pat.Get("/:name.json"), show)
 	mux.HandleFunc(pat.Get("/"), index)
-	log.Fatal(http.ListenAndServe(":8000", mux))
+
+	bind := ":"
+	if port := os.Getenv("PORT"); port != "" {
+		bind += port
+	} else {
+		bind += "8000"
+	}
+	log.Fatal(http.ListenAndServe(bind, mux))
 }
