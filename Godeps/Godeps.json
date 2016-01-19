@@ -1,10 +1,21 @@
 {
-	"ImportPath": "github.com/jekyll/dashboard",
+	"ImportPath": ".",
 	"GoVersion": "go1.5",
 	"Packages": [
-		"./..."
+		"golang.org/x/net/context",
+		"goji.io",
+		"golang.org/x/oauth2",
+		"github.com/google/go-github/github"
 	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/google/go-github/github",
+			"Rev": "b8b4ac742977310ff6e75140a403a38dab109977"
+		},
+		{
+			"ImportPath": "github.com/google/go-querystring/query",
+			"Rev": "2a60fc2ba6c19de80291203597d752e9ba58e4c0"
+		},
 		{
 			"ImportPath": "goji.io",
 			"Rev": "9f8871d62a1b65a39bd029cd2c1bf457cbc1d2f6"
@@ -12,6 +23,10 @@
 		{
 			"ImportPath": "golang.org/x/net/context",
 			"Rev": "72aa00c6241a8013dc9b040abb45f57edbe73945"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "2baa8a1b9338cf13d9eeb27696d761155fa480be"
 		}
 	]
 }

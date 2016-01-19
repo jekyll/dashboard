@@ -39,6 +39,7 @@ type Project struct {
 
 	Gem     *RubyGem      `json:"gem"`
 	Travis  *TravisReport `json:"travis"`
+	GitHub  *GitHub       `json:"github"`
 	fetched bool
 }
 
@@ -46,8 +47,10 @@ func (p *Project) fetch() {
 	if !p.fetched {
 		rubyGemChan := rubygem(p.GemName)
 		travisChan := travis(p.Nwo, p.Branch)
+		githubChan := github(p.Nwo)
 		p.Gem = <-rubyGemChan
 		p.Travis = <-travisChan
+		p.GitHub = <-githubChan
 		p.fetched = true
 	}
 }

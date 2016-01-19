@@ -29,7 +29,7 @@ var (
       <th>Commits</th>
       <th>Pull Requests</th>
       <th>Issues</th>
-      <th>Unreleased merges</th>
+      <th>Unreleased commits</th>
     </tr>
   </thead>
   <tbody>
@@ -45,10 +45,10 @@ var (
     <a href="https://travis-ci.org/{{.Travis.Nwo}}/builds/{{.Travis.Branch.Id}}">{{.Travis.Branch.State}}</a>
   {{end}}</td>
   <td>{{if .Gem}}{{.Gem.Downloads}}{{end}}</td>
-  <td>n/a</td>
-  <td>n/a</td>
-  <td>n/a</td>
-  <td>n/a</td>
+  <td>{{if .GitHub}}{{.GitHub.CommitsThisWeek}}{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.OpenPRs}}{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.OpenIssues}}{{end}}</td>
+  <td>{{if .GitHub}}{{.GitHub.CommitsSinceLastRelease}}{{end}}</td>
 </tr>
 {{end}}
   </tbody>
