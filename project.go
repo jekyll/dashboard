@@ -2,7 +2,9 @@ package dashboard
 
 import (
 	"fmt"
+	"log"
 	"sync"
+	"time"
 )
 
 var (
@@ -31,6 +33,19 @@ var (
 	}
 )
 
+func init() {
+	go resetProjectsPeriodically()
+}
+
+func resetProjectsPeriodically() {
+	for range time.Tick(time.Hour / 2) {
+		log.Println("resetting projects' cache")
+		for _, p := range defaultProjects {
+			p.reset()
+		}
+	}
+}
+
 type Project struct {
 	Name    string `json:"name"`
 	Nwo     string `json:"nwo"`
@@ -53,6 +68,13 @@ func (p *Project) fetch() {
 		p.GitHub = <-githubChan
 		p.fetched = true
 	}
+}
+
+func (p *Project) reset() {
+	p.fetched = false
+	p.Gem = nil
+	p.Travis = nil
+	p.GitHub = nil
 }
 
 func buildProjectMap() {
