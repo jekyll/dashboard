@@ -56,10 +56,12 @@ func github(nwo string) chan *GitHub {
 		repo := pieces[1]
 
 		commits, tag := commitsSinceLatestRelease(owner, repo)
+		openIssueAndPRCount := openIssues(owner, repo)
+		openPRCount := openPRs(nwo)
 		githubChan <- &GitHub{
 			CommitsThisWeek:           commitsThisWeek(owner, repo),
-			OpenPRs:                   openPRs(nwo),
-			OpenIssues:                openIssues(owner, repo),
+			OpenPRs:                   openPRCount,
+			OpenIssues:                openIssueAndPRCount-openPRCount,
 			CommitsSinceLatestRelease: commits,
 			LatestReleaseTag:          tag,
 		}
