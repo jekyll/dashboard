@@ -85,7 +85,7 @@ var (
 </div>
 
 <p>
-	Look wrong? <form action="/reset" method="post"><input type="Submit" value="Reset the cache."></form>
+	Look wrong? <form action="/reset.json" method="post"><input type="Submit" value="Reset the cache."></form>
 </p>
 
 </body>
