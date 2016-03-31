@@ -1,12 +1,7 @@
 all: build test install
 
 deps:
-	go get github.com/tools/godep
-	godep save ./... \
-	  golang.org/x/net/context \
-	  goji.io \
-	  golang.org/x/oauth2 \
-	  github.com/google/go-github/github
+	godep save ./...
 
 build: deps
 	godep go build ./...
