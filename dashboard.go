@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,16 +21,18 @@ func index(w http.ResponseWriter, r *http.Request) {
 	indexTmpl.Execute(w, templateInfo{Projects: getAllProjects()})
 }
 
+func getBindPort() string {
+	if port := os.Getenv("PORT"); port != "" {
+		return port
+	}
+	return "8000"
+}
+
 func Listen() {
 	mux := goji.NewMux()
 	mux.HandleFuncC(pat.Get("/:name.json"), show)
 	mux.HandleFunc(pat.Get("/"), index)
 
-	bind := ":"
-	if port := os.Getenv("PORT"); port != "" {
-		bind += port
-	} else {
-		bind += "8000"
-	}
+	bind := fmt.Sprintf(":%s", getBindPort())
 	log.Fatal(http.ListenAndServe(bind, mux))
 }
