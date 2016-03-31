@@ -40,9 +40,13 @@ func init() {
 func resetProjectsPeriodically() {
 	for range time.Tick(time.Hour / 2) {
 		log.Println("resetting projects' cache")
-		for _, p := range defaultProjects {
-			p.reset()
-		}
+		resetProjects()
+	}
+}
+
+func resetProjects() {
+	for _, p := range defaultProjects {
+		p.reset()
 	}
 }
 

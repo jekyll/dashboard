@@ -84,6 +84,10 @@ var (
 	<a href="https://github.com/jekyll/dashboard">Source Code</a>.
 </div>
 
+<p>
+	Look wrong? <form action="/reset" method="post"><input type="Submit" value="Reset the cache."></form>
+</p>
+
 </body>
 </html>
 `))

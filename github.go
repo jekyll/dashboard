@@ -18,7 +18,7 @@ type GitHub struct {
 	OpenPRs                   int    `json:"open_prs"`
 	OpenIssues                int    `json:"open_issues"`
 	CommitsSinceLatestRelease int    `json:"commits_since_latest_release"`
-	LatestReleaseTag          string `json"latest_release_tag"`
+	LatestReleaseTag          string `json:"latest_release_tag"`
 }
 
 func init() {
@@ -61,7 +61,7 @@ func github(nwo string) chan *GitHub {
 		githubChan <- &GitHub{
 			CommitsThisWeek:           commitsThisWeek(owner, repo),
 			OpenPRs:                   openPRCount,
-			OpenIssues:                openIssueAndPRCount-openPRCount,
+			OpenIssues:                openIssueAndPRCount - openPRCount,
 			CommitsSinceLatestRelease: commits,
 			LatestReleaseTag:          tag,
 		}

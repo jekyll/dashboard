@@ -12,8 +12,15 @@ import (
 	"golang.org/x/net/context"
 )
 
+func reset(w http.ResponseWriter, r *http.Request) {
+	resetProjects()
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"reset": true}`))
+}
+
 func show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	name := pat.Param(ctx, "name")
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(getProject(name))
 }
 
@@ -30,6 +37,7 @@ func getBindPort() string {
 
 func Listen() {
 	mux := goji.NewMux()
+	mux.HandleFunc(pat.Post("/reset.json"), reset)
 	mux.HandleFuncC(pat.Get("/:name.json"), show)
 	mux.HandleFunc(pat.Get("/"), index)
 
