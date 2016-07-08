@@ -15,6 +15,7 @@ var (
 		newProject("mercenary", "jekyll/mercenary", "master", "mercenary"),
 		newProject("jekyll-import", "jekyll/jekyll-import", "master", "jekyll-import"),
 		newProject("jekyll-feed", "jekyll/jekyll-feed", "master", "jekyll-feed"),
+		newProject("jekyll-seo-tag", "jekyll/jekyll-seo-tag", "master", "jekyll-seo-tag"),
 		newProject("jekyll-sitemap", "jekyll/jekyll-sitemap", "master", "jekyll-sitemap"),
 		newProject("jekyll-mentions", "jekyll/jekyll-mentions", "master", "jekyll-mentions"),
 		newProject("jekyll-watch", "jekyll/jekyll-watch", "master", "jekyll-watch"),
