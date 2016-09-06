@@ -8,11 +8,11 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/google/go-github/github",
-			"Rev": "2741d958876b6b98c4fd35d7fd74baa83115e953"
+			"Rev": "a59a35745f99ad92d70d69a9f180767063aa4bf3"
 		},
 		{
 			"ImportPath": "github.com/google/go-querystring/query",
-			"Rev": "6bb77fe6f42b85397288d4f6f67ac72f8f400ee7"
+			"Rev": "9235644dd9e52eeae6fa48efd539fdc351a0af53"
 		},
 		{
 			"ImportPath": "goji.io",
@@ -32,15 +32,15 @@
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
-			"Rev": "7f88271ea9913b72aca44fa7fc8af919eacc17ce"
+			"Rev": "7394c112eae4dba7e96bfcfe738e6373d61772b4"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2",
-			"Rev": "8a57ed94ffd43444c0879fe75701732a38afc985"
+			"Rev": "12e1e986157ec46fb273824565d9937bd4235105"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2/internal",
-			"Rev": "8a57ed94ffd43444c0879fe75701732a38afc985"
+			"Rev": "12e1e986157ec46fb273824565d9937bd4235105"
 		}
 	]
 }
