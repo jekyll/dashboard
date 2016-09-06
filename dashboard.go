@@ -25,7 +25,7 @@ func show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	indexTmpl.Execute(w, templateInfo{Projects: getAllProjects()})
+	indexTmpl.Execute(w, templateInfo{Projects: getProjects()})
 }
 
 func getBindPort() string {

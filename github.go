@@ -49,6 +49,7 @@ func github(nwo string) chan *GitHub {
 	go func() {
 		if nwo == "" || githubClient == nil {
 			githubChan <- nil
+			close(githubChan)
 			return
 		}
 		pieces := strings.Split(nwo, "/")
@@ -65,6 +66,7 @@ func github(nwo string) chan *GitHub {
 			CommitsSinceLatestRelease: commits,
 			LatestReleaseTag:          tag,
 		}
+		close(githubChan)
 	}()
 
 	return githubChan

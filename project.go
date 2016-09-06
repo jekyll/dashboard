@@ -10,26 +10,26 @@ import (
 var (
 	defaultProjectMap map[string]*Project
 	defaultProjects   = []*Project{
-		makeProject("jekyll", "jekyll/jekyll", "master", "jekyll"),
-		makeProject("jemoji", "jekyll/jemoji", "master", "jemoji"),
-		makeProject("mercenary", "jekyll/mercenary", "master", "mercenary"),
-		makeProject("jekyll-import", "jekyll/jekyll-import", "master", "jekyll-import"),
-		makeProject("jekyll-feed", "jekyll/jekyll-feed", "master", "jekyll-feed"),
-		makeProject("jekyll-sitemap", "jekyll/jekyll-sitemap", "master", "jekyll-sitemap"),
-		makeProject("jekyll-mentions", "jekyll/jekyll-mentions", "master", "jekyll-mentions"),
-		makeProject("jekyll-watch", "jekyll/jekyll-watch", "master", "jekyll-watch"),
-		makeProject("jekyll-compose", "jekyll/jekyll-compose", "master", "jekyll-compose"),
-		makeProject("jekyll-paginate", "jekyll/jekyll-paginate", "master", "jekyll-paginate"),
-		makeProject("jekyll-gist", "jekyll/jekyll-gist", "master", "jekyll-gist"),
-		makeProject("jekyll-coffeescript", "jekyll/jekyll-coffeescript", "master", "jekyll-coffeescript"),
-		makeProject("jekyll-opal", "jekyll/jekyll-opal", "master", "jekyll-opal"),
-		makeProject("classifier-reborn", "jekyll/classifier-reborn", "master", "classifier-reborn"),
-		makeProject("jekyll-sass-converter", "jekyll/jekyll-sass-converter", "master", "jekyll-sass-converter"),
-		makeProject("jekyll-textile-converter", "jekyll/jekyll-textile-converter", "master", "jekyll-textile-converter"),
-		makeProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
-		makeProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
-		makeProject("plugins.jekyllrb", "jekyll/plugins", "gh-pages", ""),
-		makeProject("jekyll docker", "jekyll/docker", "", ""),
+		newProject("jekyll", "jekyll/jekyll", "master", "jekyll"),
+		newProject("jemoji", "jekyll/jemoji", "master", "jemoji"),
+		newProject("mercenary", "jekyll/mercenary", "master", "mercenary"),
+		newProject("jekyll-import", "jekyll/jekyll-import", "master", "jekyll-import"),
+		newProject("jekyll-feed", "jekyll/jekyll-feed", "master", "jekyll-feed"),
+		newProject("jekyll-sitemap", "jekyll/jekyll-sitemap", "master", "jekyll-sitemap"),
+		newProject("jekyll-mentions", "jekyll/jekyll-mentions", "master", "jekyll-mentions"),
+		newProject("jekyll-watch", "jekyll/jekyll-watch", "master", "jekyll-watch"),
+		newProject("jekyll-compose", "jekyll/jekyll-compose", "master", "jekyll-compose"),
+		newProject("jekyll-paginate", "jekyll/jekyll-paginate", "master", "jekyll-paginate"),
+		newProject("jekyll-gist", "jekyll/jekyll-gist", "master", "jekyll-gist"),
+		newProject("jekyll-coffeescript", "jekyll/jekyll-coffeescript", "master", "jekyll-coffeescript"),
+		newProject("jekyll-opal", "jekyll/jekyll-opal", "master", "jekyll-opal"),
+		newProject("classifier-reborn", "jekyll/classifier-reborn", "master", "classifier-reborn"),
+		newProject("jekyll-sass-converter", "jekyll/jekyll-sass-converter", "master", "jekyll-sass-converter"),
+		newProject("jekyll-textile-converter", "jekyll/jekyll-textile-converter", "master", "jekyll-textile-converter"),
+		newProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
+		newProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
+		newProject("plugins website", "jekyll/plugins", "gh-pages", ""),
+		newProject("jekyll docker", "jekyll/docker", "master", ""),
 	}
 )
 
@@ -63,15 +63,23 @@ type Project struct {
 }
 
 func (p *Project) fetch() {
-	if !p.fetched {
-		rubyGemChan := rubygem(p.GemName)
-		travisChan := travis(p.Nwo, p.Branch)
-		githubChan := github(p.Nwo)
+	rubyGemChan := rubygem(p.GemName)
+	travisChan := travis(p.Nwo, p.Branch)
+	githubChan := github(p.Nwo)
+
+	if p.Gem == nil {
 		p.Gem = <-rubyGemChan
-		p.Travis = <-travisChan
-		p.GitHub = <-githubChan
-		p.fetched = true
 	}
+
+	if p.Travis == nil {
+		p.Travis = <-travisChan
+	}
+
+	if p.GitHub == nil {
+		p.GitHub = <-githubChan
+	}
+
+	p.fetched = true
 }
 
 func (p *Project) reset() {
@@ -88,7 +96,7 @@ func buildProjectMap() {
 	}
 }
 
-func makeProject(name, nwo, branch, rubygem string) *Project {
+func newProject(name, nwo, branch, rubygem string) *Project {
 	return &Project{
 		Name:    name,
 		Nwo:     nwo,
@@ -121,5 +129,9 @@ func getAllProjects() []*Project {
 		}(p)
 	}
 	wg.Wait()
+	return defaultProjects
+}
+
+func getProjects() []*Project {
 	return defaultProjects
 }

@@ -34,6 +34,7 @@ func travis(nwo, branch string) chan *TravisReport {
 		}
 
 		travisChan <- &info
+		close(travisChan)
 	}()
 
 	return travisChan

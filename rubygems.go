@@ -28,6 +28,7 @@ func rubygem(gem string) chan *RubyGem {
 			log.Printf("error fetching rubygems info for %s: %v", gem, err)
 		}
 		rubyGemChan <- &info
+		close(rubyGemChan)
 	}()
 
 	return rubyGemChan
