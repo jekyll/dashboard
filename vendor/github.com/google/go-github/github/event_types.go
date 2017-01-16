@@ -146,6 +146,32 @@ type EditChange struct {
 	} `json:"body,omitempty"`
 }
 
+// IntegrationInstallationEvent is triggered when an integration is created or deleted.
+// The Webhook event name is "integration_installation".
+//
+// GitHub docs: https://developer.github.com/early-access/integrations/webhooks/#integrationinstallationevent
+type IntegrationInstallationEvent struct {
+	// The action that was performed. Possible values for an "integration_installation"
+	// event are: "created", "deleted".
+	Action       *string       `json:"action,omitempty"`
+	Installation *Installation `json:"installation,omitempty"`
+	Sender       *User         `json:"sender,omitempty"`
+}
+
+// IntegrationInstallationRepositoriesEvent is triggered when an integration repository
+// is added or removed. The Webhook event name is "integration_installation_repositories".
+//
+// GitHub docs: https://developer.github.com/early-access/integrations/webhooks/#integrationinstallationrepositoriesevent
+type IntegrationInstallationRepositoriesEvent struct {
+	// The action that was performed. Possible values for an "integration_installation_repositories"
+	// event are: "added", "removed".
+	Action              *string       `json:"action,omitempty"`
+	Installation        *Installation `json:"installation,omitempty"`
+	RepositoriesAdded   []*Repository `json:"repositories_added,omitempty"`
+	RepositoriesRemoved []*Repository `json:"repositories_removed,omitempty"`
+	Sender              *User         `json:"sender,omitempty"`
+}
+
 // IssueCommentEvent is triggered when an issue comment is created on an issue
 // or pull request.
 // The Webhook event name is "issue_comment".
@@ -183,6 +209,22 @@ type IssuesEvent struct {
 	Sender  *User       `json:"sender,omitempty"`
 }
 
+// LabelEvent is triggered when a repository's label is created, edited, or deleted.
+// The Webhook event name is "label"
+//
+// GitHub docs: https://developer.github.com/v3/activity/events/types/#labelevent
+type LabelEvent struct {
+	// Action is the action that was performed. Possible values are:
+	// "created", "edited", "deleted"
+	Action *string `json:"action,omitempty"`
+	Label  *Label  `json:"label,omitempty"`
+
+	// The following fields are only populated by Webhook events.
+	Changes *EditChange   `json:"changes,omitempty"`
+	Repo    *Repository   `json:"repository,omitempty"`
+	Org     *Organization `json:"organization,omitempty"`
+}
+
 // MemberEvent is triggered when a user is added as a collaborator to a repository.
 // The Webhook event name is "member".
 //
@@ -217,6 +259,23 @@ type MembershipEvent struct {
 	Sender *User         `json:"sender,omitempty"`
 }
 
+// MilestoneEvent is triggered when a milestone is created, closed, opened, edited, or deleted.
+// The Webhook event name is "milestone".
+//
+// Github docs: https://developer.github.com/v3/activity/events/types/#milestoneevent
+type MilestoneEvent struct {
+	// Action is the action that was performed. Possible values are:
+	// "created", "closed", "opened", "edited", "deleted"
+	Action    *string    `json:"action,omitempty"`
+	Milestone *Milestone `json:"milestone,omitempty"`
+
+	// The following fields are only populated by Webhook events.
+	Changes *EditChange   `json:"changes,omitempty"`
+	Repo    *Repository   `json:"repository,omitempty"`
+	Sender  *User         `json:"sender,omitempty"`
+	Org     *Organization `json:"organization,omitempty"`
+}
+
 // PageBuildEvent represents an attempted build of a GitHub Pages site, whether
 // successful or not.
 // The Webhook event name is "page_build".
@@ -234,6 +293,18 @@ type PageBuildEvent struct {
 	ID     *int        `json:"id,omitempty"`
 	Repo   *Repository `json:"repository,omitempty"`
 	Sender *User       `json:"sender,omitempty"`
+}
+
+// PingEvent is triggered when a Webhook is added to GitHub.
+//
+// GitHub docs: https://developer.github.com/webhooks/#ping-event
+type PingEvent struct {
+	// Random string of GitHub zen.
+	Zen *string `json:"zen,omitempty"`
+	// The ID of the webhook that triggered the ping.
+	HookID *int `json:"hook_id,omitempty"`
+	// The webhook configuration.
+	Hook *Hook `json:"hook,omitempty"`
 }
 
 // PublicEvent is triggered when a private repository is open sourced.
@@ -266,6 +337,26 @@ type PullRequestEvent struct {
 	Changes *EditChange `json:"changes,omitempty"`
 	Repo    *Repository `json:"repository,omitempty"`
 	Sender  *User       `json:"sender,omitempty"`
+}
+
+// PullRequestReviewEvent is triggered when a review is submitted on a pull
+// request.
+// The Webhook event name is "pull_request_review".
+//
+// GitHub docs: https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent
+type PullRequestReviewEvent struct {
+	// Action is always "submitted".
+	Action      *string            `json:"action,omitempty"`
+	Review      *PullRequestReview `json:"review,omitempty"`
+	PullRequest *PullRequest       `json:"pull_request,omitempty"`
+
+	// The following fields are only populated by Webhook events.
+	Repo   *Repository `json:"repository,omitempty"`
+	Sender *User       `json:"sender,omitempty"`
+
+	// The following field is only present when the webhook is triggered on
+	// a repository belonging to an organization.
+	Organization *Organization `json:"organization,omitempty"`
 }
 
 // PullRequestReviewCommentEvent is triggered when a comment is created on a
@@ -425,14 +516,14 @@ type StatusEvent struct {
 	Branches    []*Branch `json:"branches,omitempty"`
 
 	// The following fields are only populated by Webhook events.
-	ID        *int             `json:"id,omitempty"`
-	Name      *string          `json:"name,omitempty"`
-	Context   *string          `json:"context,omitempty"`
-	Commit    *PushEventCommit `json:"commit,omitempty"`
-	CreatedAt *Timestamp       `json:"created_at,omitempty"`
-	UpdatedAt *Timestamp       `json:"updated_at,omitempty"`
-	Repo      *Repository      `json:"repository,omitempty"`
-	Sender    *User            `json:"sender,omitempty"`
+	ID        *int              `json:"id,omitempty"`
+	Name      *string           `json:"name,omitempty"`
+	Context   *string           `json:"context,omitempty"`
+	Commit    *RepositoryCommit `json:"commit,omitempty"`
+	CreatedAt *Timestamp        `json:"created_at,omitempty"`
+	UpdatedAt *Timestamp        `json:"updated_at,omitempty"`
+	Repo      *Repository       `json:"repository,omitempty"`
+	Sender    *User             `json:"sender,omitempty"`
 }
 
 // TeamAddEvent is triggered when a repository is added to a team.
