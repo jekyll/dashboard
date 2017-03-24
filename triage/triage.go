@@ -1,0 +1,145 @@
+package triage
+
+import (
+	"context"
+	"log"
+	"net/http"
+
+	"github.com/google/go-github/github"
+)
+
+func New(client *github.Client, labelsofInterest []string) Triager {
+	return Triager{
+		Client:           client,
+		LabelsOfInterest: labelsofInterest,
+		repoTypeCache:    map[string][]IssueGrouping{},
+	}
+}
+
+type Triager struct {
+	Client           *github.Client
+	LabelsOfInterest []string
+
+	repoTypeCache map[string][]IssueGrouping
+}
+
+func (t Triager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	repo := r.FormValue("repo")
+	if repo == "" {
+		repo = "jekyll/jekyll"
+	}
+
+	issueType := r.FormValue("type")
+	if issueType == "" {
+		issueType = "all"
+	}
+
+	label := r.FormValue("label")
+	// If blank, then we pull all of them.
+
+	err := triageTmpl.Execute(w, t.getTemplateInfo(repo, issueType, label))
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
+}
+
+func (t *Triager) getTemplateInfo(repo, issueType, label string) templateInfo {
+	key := repo + "____" + issueType
+	if _, ok := t.repoTypeCache[key]; !ok {
+		t.repoTypeCache[key] = t.fetchIssues(repo, issueType)
+	}
+
+	desiredGroupings := []IssueGrouping{}
+	if label == "" {
+		desiredGroupings = t.repoTypeCache[key]
+	} else {
+		for _, labelGrouping := range t.repoTypeCache[key] {
+			if labelGrouping.Label == label {
+				desiredGroupings = append(desiredGroupings, labelGrouping)
+				break
+			}
+		}
+	}
+
+	if issueType == "all" {
+		issueType = "issues & pull request"
+	}
+
+	return templateInfo{
+		RepoName:             repo,
+		IssueType:            issueType,
+		IssuesGroupedByLabel: desiredGroupings,
+	}
+}
+
+func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
+	log.Printf("Fetching issues of type %s for %s", issueType, repo)
+
+	// Get all issues or pull requests (depending on issueType) for repo
+	issues := []github.Issue{}
+	query := "repo:" + repo + " is:open"
+	if issueType != "" && issueType != "all" {
+		query += " is:" + issueType
+	}
+	opts := &github.SearchOptions{
+		Sort:        "created",
+		Order:       "desc",
+		ListOptions: github.ListOptions{PerPage: 500},
+	}
+	for {
+		log.Printf("Running query %q page %d", query, opts.ListOptions.Page)
+		result, resp, err := t.Client.Search.Issues(context.Background(), query, opts)
+		if err != nil {
+			return []IssueGrouping{{Label: "error: " + err.Error()}}
+		}
+
+		for _, issue := range result.Issues {
+			issues = append(issues, issue)
+		}
+
+		if resp.NextPage == 0 {
+			break
+		}
+		opts.ListOptions.Page = resp.NextPage
+	}
+
+	// Create groupings
+	triageGroup := &IssueGrouping{Label: "triage", Issues: []github.Issue{}}
+	grouping := []*IssueGrouping{}
+	for _, label := range t.LabelsOfInterest {
+		grouping = append(grouping, &IssueGrouping{Label: label, Issues: []github.Issue{}})
+	}
+
+	// Group by each label of interest.
+	for _, issue := range issues {
+		matchedALabelGroup := false
+		for _, labelGroup := range grouping {
+			for _, label := range issue.Labels {
+				log.Printf("%q == %q", label.GetName(), labelGroup.Label)
+				if label.GetName() == labelGroup.Label {
+					labelGroup.Issues = append(labelGroup.Issues, issue)
+					matchedALabelGroup = true
+					log.Printf("matched! label group %q now has %d issues", labelGroup.Label, len(labelGroup.Issues))
+					break
+				}
+			}
+		}
+		// If it didn't match another grouping label, then it's not been properly triaged.
+		if matchedALabelGroup == false {
+			triageGroup.Issues = append(triageGroup.Issues, issue)
+		}
+	}
+
+	unmodifiable := []IssueGrouping{*triageGroup}
+	for _, group := range grouping {
+		unmodifiable = append(unmodifiable, *group)
+	}
+
+	for _, labelGroup := range unmodifiable {
+		log.Printf("Label group %q has %d issues", labelGroup.Label, len(labelGroup.Issues))
+	}
+
+	log.Printf("Done fetching issues of type %s for %s... found %d issues", issueType, repo, len(issues))
+
+	return unmodifiable
+}
