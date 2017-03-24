@@ -9,8 +9,8 @@ import (
 	"github.com/google/go-github/github"
 )
 
-func New(client *github.Client, labelsofInterest []string) Triager {
-	return Triager{
+func New(client *github.Client, labelsofInterest []string) *Triager {
+	return &Triager{
 		Client:           client,
 		LabelsOfInterest: labelsofInterest,
 		repoTypeCache:    map[string][]IssueGrouping{},
@@ -24,7 +24,14 @@ type Triager struct {
 	repoTypeCache map[string][]IssueGrouping
 }
 
-func (t Triager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (t *Triager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.FormValue("reset") != "" {
+		t.repoTypeCache = map[string][]IssueGrouping{}
+		log.Println("resetting repoTypeCache...")
+		http.Redirect(w, r, "/triage", 302)
+		return
+	}
+
 	repo := r.FormValue("repo")
 	if repo == "" {
 		repo = "jekyll/jekyll"
