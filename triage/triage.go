@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/go-github/github"
 )
@@ -115,11 +116,9 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 		matchedALabelGroup := false
 		for _, labelGroup := range grouping {
 			for _, label := range issue.Labels {
-				log.Printf("%q == %q", label.GetName(), labelGroup.Label)
 				if label.GetName() == labelGroup.Label {
 					labelGroup.Issues = append(labelGroup.Issues, issue)
 					matchedALabelGroup = true
-					log.Printf("matched! label group %q now has %d issues", labelGroup.Label, len(labelGroup.Issues))
 					break
 				}
 			}
@@ -130,8 +129,10 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 		}
 	}
 
+	triageGroup.lastUpdated = time.Now()
 	unmodifiable := []IssueGrouping{*triageGroup}
 	for _, group := range grouping {
+		group.lastUpdated = time.Now()
 		unmodifiable = append(unmodifiable, *group)
 	}
 

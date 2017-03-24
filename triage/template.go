@@ -40,13 +40,16 @@ type IssueGrouping struct {
 	lastUpdated time.Time
 }
 
-func (i IssueGrouping) LastUpdated() string {
-	return i.lastUpdated.UTC().Format(time.UnixDate)
-}
-
 type templateInfo struct {
 	RepoName, IssueType  string
 	IssuesGroupedByLabel []IssueGrouping
+}
+
+func (t templateInfo) LastUpdated() string {
+	if len(t.IssuesGroupedByLabel) == 0 {
+		return "never"
+	}
+	return t.IssuesGroupedByLabel[0].lastUpdated.UTC().Format(time.UnixDate)
 }
 
 func (t templateInfo) Total() int {
@@ -78,16 +81,18 @@ var (
 <body>
 
 <pre><b>{{.RepoName}} {{.IssueType}} triage</b>
-<b>{{.LastUpdated}}</b>
+Last updated <b>{{.LastUpdated}}</b>
 
-<b>{{.Total}} Pending {{.IssueType}}s</b>
+<b>{{.Total}} pending {{.IssueType}}s</b>
+
+Filter by using the <b>type</b> (issue/pr/all), <b>label</b> (see below), or <b>repo</b> (nwo, e.g. "jekyll/jekyll") URL parameters. Example: <a href="/triage?type=issue&label=documentation">view only "documentation" issues</a>.
 
 <hr><b><font size='+1'>Pending {{.IssueType}}s</font></b>
 
 {{range .IssuesGroupedByLabel}}
 <b>{{.Label}}</b>{{range .Issues}}
     <a href="{{.HTMLURL}}" target="_blank" title="issue {{.Number}}">{{issueType .}} {{.Number}}</a>{{printf "\t"}}{{.Title}}
-                    {{.User.GetLogin}} →{{range .Assignees}} {{.Login}}{{end}}, {{daysAgo .GetUpdatedAt}}/{{daysAgo .GetCreatedAt}} days, waiting for {{if hasLabel . "pending-feedback"}}author{{else}}reviewer{{end}}
+                    {{.User.GetLogin}} →{{range .Assignees}} {{.Login}}{{end}}{{if len .Assignees | eq 0}} ???{{end}}, {{daysAgo .GetUpdatedAt}}/{{daysAgo .GetCreatedAt}} days, waiting for {{if hasLabel . "pending-feedback"}}author{{else}}reviewer{{end}}
 {{end}}
     {{if len .Issues | eq 0}}no issues!{{end}}
 {{end}}
