@@ -1,30 +1,30 @@
 {
 	"ImportPath": "github.com/jekyll/dashboard",
-	"GoVersion": "go1.7",
-	"GodepVersion": "v75",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
 	"Packages": [
-		"./..."
+		"github.com/jekyll/dashboard/..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/google/go-github/github",
-			"Rev": "c8ebe3a4d7f0791a6315b7410353d4084c58805d"
+			"Rev": "d683a1c6198d75c6be7a7ab5e2f9834cb6408834"
 		},
 		{
 			"ImportPath": "github.com/google/go-querystring/query",
-			"Rev": "9235644dd9e52eeae6fa48efd539fdc351a0af53"
+			"Rev": "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
-			"Rev": "45e771701b814666a7eb299e6c7a57d0b1799e91"
+			"Rev": "a6577fac2d73be281a500b310739095313165611"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2",
-			"Rev": "314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd"
+			"Rev": "efb10a30610e617dbb17fc243f4cc61a8cfa2903"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2/internal",
-			"Rev": "314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd"
+			"Rev": "efb10a30610e617dbb17fc243f4cc61a8cfa2903"
 		}
 	]
 }
