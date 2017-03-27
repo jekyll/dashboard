@@ -90,7 +90,7 @@ Filter by using the <b>type</b> (issue/pr/all), <b>label</b> (see below), or <b>
 <hr><b><font size='+1'>Pending {{.IssueType}}s</font></b>
 
 {{range .IssuesGroupedByLabel}}
-<b>{{.Label}}</b>{{range .Issues}}
+<b>{{.Label}}</b> ({{len .Issues}} issues){{range .Issues}}
     <a href="{{.HTMLURL}}" target="_blank" title="issue {{.Number}}">{{issueType .}} {{.Number}}</a>{{printf "\t"}}{{.Title}}
                     {{.User.GetLogin}} →{{range .Assignees}} {{.Login}}{{end}}{{if len .Assignees | eq 0}} ???{{end}}, {{daysAgo .GetUpdatedAt}}/{{daysAgo .GetCreatedAt}} days, waiting for {{if hasLabel . "pending-feedback"}}author{{else}}reviewer{{end}}
 {{end}}
