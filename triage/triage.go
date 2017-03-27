@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -45,13 +46,16 @@ func (t *Triager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	label := r.FormValue("label")
 	// If blank, then we pull all of them.
 
-	err := triageTmpl.Execute(w, t.getTemplateInfo(repo, issueType, label))
+	order := r.FormValue("order")
+	// If blank, then we don't do any sorting.
+
+	err := triageTmpl.Execute(w, t.getTemplateInfo(repo, issueType, label, order))
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
 }
 
-func (t *Triager) getTemplateInfo(repo, issueType, label string) templateInfo {
+func (t *Triager) getTemplateInfo(repo, issueType, label, order string) templateInfo {
 	key := repo + "____" + issueType
 	if _, ok := t.repoTypeCache[key]; !ok {
 		t.repoTypeCache[key] = t.fetchIssues(repo, issueType)
@@ -73,6 +77,19 @@ func (t *Triager) getTemplateInfo(repo, issueType, label string) templateInfo {
 		issueType = "issues & pull request"
 	}
 
+	if order != "" {
+		log.Printf("Ordering issues by CreatedAt %s", order)
+		for _, labelGrouping := range desiredGroupings {
+			if order == "desc" {
+				// Sorts them in descending order by CreatedAt date.
+				sort.Stable(sort.Reverse(labelGrouping.Issues))
+			} else {
+				// Sorts them in ascending order by CreatedAt date.
+				sort.Stable(labelGrouping.Issues)
+			}
+		}
+	}
+
 	return templateInfo{
 		RepoName:             repo,
 		IssueType:            issueType,
@@ -91,7 +108,7 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 	}
 	opts := &github.SearchOptions{
 		Sort:        "created",
-		Order:       "desc",
+		Order:       "asc",
 		ListOptions: github.ListOptions{PerPage: 500},
 	}
 	for {
@@ -112,10 +129,10 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 	}
 
 	// Create groupings
-	triageGroup := &IssueGrouping{Label: "triage", Issues: []github.Issue{}}
+	triageGroup := &IssueGrouping{Label: "triage", Issues: Issues{}}
 	grouping := []*IssueGrouping{}
 	for _, label := range t.LabelsOfInterest {
-		grouping = append(grouping, &IssueGrouping{Label: label, Issues: []github.Issue{}})
+		grouping = append(grouping, &IssueGrouping{Label: label, Issues: Issues{}})
 	}
 
 	// Group by each label of interest.

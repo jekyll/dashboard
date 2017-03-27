@@ -13,8 +13,8 @@ var pretendTemplateInfo = templateInfo{
 	IssuesGroupedByLabel: []IssueGrouping{
 		{
 			Label: "documentation",
-			Issues: []github.Issue{
-				{
+			Issues: Issues{
+				github.Issue{
 					ID:      github.Int(100000),
 					Number:  github.Int(125),
 					State:   github.String("open"),
@@ -31,13 +31,6 @@ var pretendTemplateInfo = templateInfo{
 			},
 		},
 	},
-}
-
-type IssueGrouping struct {
-	Label  string
-	Issues []github.Issue
-
-	lastUpdated time.Time
 }
 
 type templateInfo struct {
@@ -85,7 +78,7 @@ Last updated <b>{{.LastUpdated}}</b>
 
 <b>{{.Total}} pending {{.IssueType}}s</b>
 
-Filter by using the <b>type</b> (issue/pr/all), <b>label</b> (see below), or <b>repo</b> (nwo, e.g. "jekyll/jekyll") URL parameters. Example: <a href="/triage?type=issue&label=documentation">view only "documentation" issues</a>.
+Filter by using the <b>type</b> (issue/pr/all), <b>label</b> (see below), or <b>repo</b> (nwo, e.g. "jekyll/jekyll") URL parameters. You can reorder by creation date using <b>order</b> key (asc/desc). Example: <a href="/triage?type=issue&label=documentation&order=desc">view only "documentation" issues starting with newest</a>.
 
 <hr><b><font size='+1'>Pending {{.IssueType}}s</font></b>
 
