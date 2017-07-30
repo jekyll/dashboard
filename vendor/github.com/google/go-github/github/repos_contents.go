@@ -158,13 +158,13 @@ func (s *RepositoriesService) GetContents(ctx context.Context, owner, repo, path
 	}
 	fileUnmarshalError := json.Unmarshal(rawJSON, &fileContent)
 	if fileUnmarshalError == nil {
-		return fileContent, nil, resp, fileUnmarshalError
+		return fileContent, nil, resp, nil
 	}
 	directoryUnmarshalError := json.Unmarshal(rawJSON, &directoryContent)
 	if directoryUnmarshalError == nil {
-		return nil, directoryContent, resp, directoryUnmarshalError
+		return nil, directoryContent, resp, nil
 	}
-	return nil, nil, resp, fmt.Errorf("unmarshalling failed for both file and directory content: %s and %s ", fileUnmarshalError, directoryUnmarshalError)
+	return nil, nil, resp, fmt.Errorf("unmarshalling failed for both file and directory content: %s and %s", fileUnmarshalError, directoryUnmarshalError)
 }
 
 // CreateFile creates a new file in a repository at the given path and returns

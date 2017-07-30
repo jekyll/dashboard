@@ -33,6 +33,7 @@ type PullRequest struct {
 	Merged              *bool      `json:"merged,omitempty"`
 	Mergeable           *bool      `json:"mergeable,omitempty"`
 	MergedBy            *User      `json:"merged_by,omitempty"`
+	MergeCommitSHA      *string    `json:"merge_commit_sha,omitempty"`
 	Comments            *int       `json:"comments,omitempty"`
 	Commits             *int       `json:"commits,omitempty"`
 	Additions           *int       `json:"additions,omitempty"`
@@ -341,9 +342,6 @@ func (s *PullRequestsService) Merge(ctx context.Context, owner string, repo stri
 	if err != nil {
 		return nil, nil, err
 	}
-
-	// TODO: This header will be unnecessary when the API is no longer in preview.
-	req.Header.Set("Accept", mediaTypeSquashPreview)
 
 	mergeResult := new(PullRequestMergeResult)
 	resp, err := s.client.Do(ctx, req, mergeResult)
