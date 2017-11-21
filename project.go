@@ -1,7 +1,6 @@
 package dashboard
 
 import (
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -30,6 +29,7 @@ var (
 		newProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
 		newProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
 		newProject("plugins website", "jekyll/plugins", "master", ""),
+		newProject("jekyll-archives", "jekyll/jekyll-archives", "master", "jekyll-archives"),
 		newProject("jekyll docker", "jekyll/docker", "master", ""),
 	}
 )
@@ -106,7 +106,7 @@ func newProject(name, nwo, branch, rubygem string) *Project {
 	}
 }
 
-func getProject(name string) Project {
+func getProject(name string) *Project {
 	if defaultProjectMap == nil {
 		buildProjectMap()
 	}
@@ -115,9 +115,10 @@ func getProject(name string) Project {
 		if !p.fetched {
 			p.fetch()
 		}
-		return *p
+		return p
 	}
-	panic(fmt.Sprintf("no project named '%s'", name))
+
+	return nil
 }
 
 func getAllProjects() []*Project {

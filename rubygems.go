@@ -13,21 +13,29 @@ type RubyGem struct {
 	DocumentationURI string `json:"documentation_uri"`
 }
 
+func GetRubyGem(gem string) (*RubyGem, error) {
+	if gem == "" {
+		return nil, nil
+	}
+
+	info := &RubyGem{}
+	err := getRetry(5, fmt.Sprintf("https://rubygems.org/api/v1/gems/%s.json", gem), info)
+	if err != nil {
+		return nil, err
+	}
+
+	return info, nil
+}
+
 func rubygem(gem string) chan *RubyGem {
 	rubyGemChan := make(chan *RubyGem, 1)
 
 	go func() {
-		if gem == "" {
-			rubyGemChan <- nil
-			return
-		}
-		var info RubyGem
-		err := getRetry(5, fmt.Sprintf("https://rubygems.org/api/v1/gems/%s.json", gem), &info)
+		info, err := GetRubyGem(gem)
 		if err != nil {
-			rubyGemChan <- nil
 			log.Printf("error fetching rubygems info for %s: %v", gem, err)
 		}
-		rubyGemChan <- &info
+		rubyGemChan <- info
 		close(rubyGemChan)
 	}()
 
