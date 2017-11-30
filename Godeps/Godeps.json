@@ -8,7 +8,7 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/google/go-github/github",
-			"Rev": "78072f320213a7e011b5fb2700bcb9eb90efec37"
+			"Rev": "a89ea1cdf79929726a9416663609269ada774da0"
 		},
 		{
 			"ImportPath": "github.com/google/go-querystring/query",
@@ -16,19 +16,15 @@
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
-			"Rev": "57efc9c3d9f91fb3277f8da1cff370539c4d3dc5"
-		},
-		{
-			"ImportPath": "golang.org/x/net/context/ctxhttp",
-			"Rev": "57efc9c3d9f91fb3277f8da1cff370539c4d3dc5"
+			"Rev": "513929065c19401a1c7b76ecd942f9f86a0c061b"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2",
-			"Rev": "9a379c6b3e95a790ffc43293c2a78dee0d7b6e20"
+			"Rev": "33fa30fe45020622640e947917fd1fc4c81e3dce"
 		},
 		{
 			"ImportPath": "golang.org/x/oauth2/internal",
-			"Rev": "9a379c6b3e95a790ffc43293c2a78dee0d7b6e20"
+			"Rev": "33fa30fe45020622640e947917fd1fc4c81e3dce"
 		}
 	]
 }
