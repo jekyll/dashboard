@@ -28,8 +28,8 @@ var (
 		newProject("jekyll-textile-converter", "jekyll/jekyll-textile-converter", "master", "jekyll-textile-converter"),
 		newProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
 		newProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
+		newProject("plugins website", "jekyll/plugins", "master", ""),
 		newProject("jekyll-archives", "jekyll/jekyll-archives", "master", "jekyll-archives"),
-		newProject("plugins website", "jekyll/plugins", "gh-pages", ""),
 		newProject("jekyll docker", "jekyll/docker", "master", ""),
 	}
 )
