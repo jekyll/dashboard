@@ -32,7 +32,7 @@ var (
 		newProject("jekyll-admin", "jekyll/jekyll-admin", "master", "jekyll-admin"),
 		newProject("classifier-reborn", "jekyll/classifier-reborn", "master", "classifier-reborn"),
 		newProject("mercenary", "jekyll/mercenary", "master", "mercenary"),
-		newProject("plugins website", "jekyll/plugins", "master", ""),
+		newProject("Jekyll Directory", "jekyll/directory", "master", ""),
 	}
 )
 
