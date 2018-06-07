@@ -9,3 +9,5 @@ build: deps
 test: deps
 	go test . ./cmd/... ./triage/...
 
+server: build
+	dashboard -http=localhost:8000
