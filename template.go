@@ -24,6 +24,15 @@ var (
       width: 95%;
       margin: 0 auto;
   }
+  .status-good, .travis-status-passed {
+      background-color: rgba(0, 255, 0, 0.1);
+  }
+  .status-bad, .travis-status-failed {
+      background-color: rgba(255, 0, 0, 0.1);
+  }
+  .status-unknown, .travis-status-errored {
+      background-color: rgba(0, 0, 0, 0.1);
+  }
   </style>
   <script type="application/javascript">
   function reqListener () {
@@ -67,6 +76,7 @@ var (
         travisA.title = info.travis.nwo + " on TravisCI";
         travisA.innerText = info.travis.branch.state;
         travisTD.appendChild(travisA);
+        travisTD.classList.add("travis-status-"+info.travis.branch.state);
     } else {
         travisTD.innerText = "no info";
     }
