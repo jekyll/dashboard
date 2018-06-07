@@ -27,6 +27,9 @@ var (
   .status-good, .travis-status-passed {
       background-color: rgba(0, 255, 0, 0.1);
   }
+  .status-tbd, .travis-status-pending {
+      background-color: rgba(255, 255, 0, 0.1);
+  }
   .status-bad, .travis-status-failed {
       background-color: rgba(255, 0, 0, 0.1);
   }
@@ -100,11 +103,6 @@ var (
         return;
     }
 
-    // Commits
-    var commitsTD = document.createElement("td");
-    commitsTD.innerText = info.github.commits_this_week;
-    tr.appendChild(commitsTD);
-
     // Pull Requests
     var pullrequestsTD = document.createElement("td");
     if (info.github.open_prs > 0) {
@@ -148,6 +146,16 @@ var (
     } else {
         unreleasedcommitsTD.innerText = info.github.commits_since_latest_release;
     }
+
+    // Start warning us when we get more than 50 commits since the latest release.
+    if (info.github.commits_since_latest_release < 10) {
+        unreleasedcommitsTD.classList.add("status-good");
+    } else if (info.github.commits_since_latest_release < 30) {
+        unreleasedcommitsTD.classList.add("status-tbd");
+    } else {
+        unreleasedcommitsTD.classList.add("status-bad");
+    }
+
     tr.appendChild(unreleasedcommitsTD);
   }
 
@@ -170,7 +178,6 @@ var (
       <th>Gem</th>
       <th>Travis</th>
       <th>Downloads</th>
-      <th>Commits</th>
       <th>Pull Requests</th>
       <th>Issues</th>
       <th>Unreleased commits</th>
