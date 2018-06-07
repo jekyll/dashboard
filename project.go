@@ -66,23 +66,51 @@ type Project struct {
 }
 
 func (p *Project) fetch() {
-	rubyGemChan := rubygem(p.GemName)
-	travisChan := travis(p.Nwo, p.Branch)
-	githubChan := github(p.Nwo)
+	var wg sync.WaitGroup
+	wg.Add(3)
 
-	if p.Gem == nil {
-		p.Gem = <-rubyGemChan
-	}
+	go func() {
+		p.fetchRubyGemData()
+		wg.Done()
+	}()
 
-	if p.Travis == nil {
-		p.Travis = <-travisChan
-	}
+	go func() {
+		p.fetchTravisData()
+		wg.Done()
+	}()
 
-	if p.GitHub == nil {
-		p.GitHub = <-githubChan
-	}
+	go func() {
+		p.fetchGitHubData()
+		wg.Done()
+	}()
+
+	wg.Wait()
 
 	p.fetched = true
+}
+
+func (p *Project) fetchRubyGemData() {
+	if p.Gem != nil {
+		return
+	}
+
+	p.Gem = <-rubygem(p.GemName)
+}
+
+func (p *Project) fetchTravisData() {
+	if p.Travis != nil {
+		return
+	}
+
+	p.Travis = <-travis(p.Nwo, p.Branch)
+}
+
+func (p *Project) fetchGitHubData() {
+	if p.GitHub != nil {
+		return
+	}
+
+	p.GitHub = <-github(p.Nwo)
 }
 
 func (p *Project) reset() {
