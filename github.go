@@ -40,7 +40,7 @@ func newGitHubClient() *gh.Client {
 		))
 	} else {
 		log.Printf("%s required for GitHub", accessTokenEnvVar)
-		return nil
+		return gh.NewClient(nil)
 	}
 }
 
