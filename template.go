@@ -85,6 +85,20 @@ var (
     }
     tr.appendChild(travisTD);
 
+    // AppVeyor
+    var appVeyorTD = document.createElement("td");
+    if (info.app_veyor) {
+        var appVeyorA = document.createElement("a");
+        appVeyorA.href = info.app_veyor.build.html_url;
+        appVeyorA.title = info.app_veyor.nwo + " on AppVeyorCI";
+        appVeyorA.innerText = info.app_veyor.build.status;
+        appVeyorTD.appendChild(appVeyorA);
+        appVeyorTD.classList.add("app_veyor-status-"+info.app_veyor.build.status);
+    } else {
+        appVeyorTD.innerText = "no info";
+    }
+    tr.appendChild(appVeyorTD);
+
     // Downloads
     var downloadsTD = document.createElement("td");
     if (info.gem && info.gem.downloads) {
@@ -177,6 +191,7 @@ var (
       <th>Repo</th>
       <th>Gem</th>
       <th>Travis</th>
+      <th>AppVeyor</th>
       <th>Downloads</th>
       <th>Pull Requests</th>
       <th>Issues</th>

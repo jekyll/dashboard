@@ -161,7 +161,6 @@ func grabGraphQLDataFromGitHub() {
 		err := doGraphql(githubClient, fmt.Sprintf(graphqlQuery, ids), githubGraphQLData)
 		if err != nil {
 			log.Printf("error fetching graphql: %+v", err)
-			githubGraphQLData.once = sync.Once{}
 		}
 	})
 }
