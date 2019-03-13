@@ -16,8 +16,8 @@ var (
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta content="origin-when-cross-origin" name="referrer" />
-  <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-e04a23d39bf81b7db3c635177756ef51bc171feb440be9e174933c6eb56382da.css" integrity="sha256-4Eoj05v4G32zxjUXd1bvUbwXH+tEC+nhdJM8brVjgto=" media="all" rel="stylesheet" />
-  <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-24334c18831214381e60cd2cee0b86be216d64096d129d8c2b644d1fdcba1d4e.css" integrity="sha256-JDNMGIMSFDgeYM0s7guGviFtZAltEp2MK2RNH9y6HU4=" media="all" rel="stylesheet" />
+  <link crossorigin="anonymous" media="all" integrity="sha512-R+Vpkv86him5JZcqAEuQRUGOKqH897w6q7uJ1P65tQR+9Hxar5vU4wpEd4uvcXT8ooRZ7zsNftrjnCemEt2u2Q==" rel="stylesheet" href="https://github.githubassets.com/assets/frameworks-f4557b27209914aa4705202b188165b5.css" />
+  <link crossorigin="anonymous" media="all" integrity="sha512-KY4UdRxVuu2IR/1+5BfVjOAci/NTaEiyg0NelgnXevWPbhUU4YLcpNeWyVh6kVHzLwOF75XT+iW9BwA4zURVaw==" rel="stylesheet" href="https://github.githubassets.com/assets/github-af00f93db15422dc4aa5207a2f2ee52c.css" />
   <title>Dashboard</title>
   <style type="text/css">
   .markdown-body {
