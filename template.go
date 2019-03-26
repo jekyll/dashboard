@@ -24,13 +24,13 @@ var (
       width: 95%;
       margin: 0 auto;
   }
-  .status-good, .travis-status-passed {
+  .status-good, .travis-status-passed, .appveyor-status-success {
       background-color: rgba(0, 255, 0, 0.1);
   }
   .status-tbd, .travis-status-pending {
       background-color: rgba(255, 255, 0, 0.1);
   }
-  .status-bad, .travis-status-failed {
+  .status-bad, .travis-status-failed, .appveyor-status-failed {
       background-color: rgba(255, 0, 0, 0.1);
   }
   .status-unknown, .travis-status-errored {
@@ -93,7 +93,7 @@ var (
         appVeyorA.title = info.app_veyor.nwo + " on AppVeyorCI";
         appVeyorA.innerText = info.app_veyor.build.status;
         appVeyorTD.appendChild(appVeyorA);
-        appVeyorTD.classList.add("app_veyor-status-"+info.app_veyor.build.status);
+        appVeyorTD.classList.add("appveyor-status-"+info.app_veyor.build.status);
     } else {
         appVeyorTD.innerText = "no info";
     }
