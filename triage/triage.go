@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v37/github"
 )
 
 func New(client *github.Client, labelsofInterest []string) *Triager {
@@ -101,7 +101,7 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 	log.Printf("Fetching issues of type %s for %s", issueType, repo)
 
 	// Get all issues or pull requests (depending on issueType) for repo
-	issues := []github.Issue{}
+	issues := []*github.Issue{}
 	query := "repo:" + repo + " is:open"
 	if issueType != "" && issueType != "all" {
 		query += " is:" + issueType
@@ -141,7 +141,7 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 		for _, labelGroup := range grouping {
 			for _, label := range issue.Labels {
 				if label.GetName() == labelGroup.Label {
-					labelGroup.Issues = append(labelGroup.Issues, issue)
+					labelGroup.Issues = append(labelGroup.Issues, *issue)
 					matchedALabelGroup = true
 					break
 				}
@@ -149,7 +149,7 @@ func (t Triager) fetchIssues(repo, issueType string) []IssueGrouping {
 		}
 		// If it didn't match another grouping label, then it's not been properly triaged.
 		if matchedALabelGroup == false {
-			triageGroup.Issues = append(triageGroup.Issues, issue)
+			triageGroup.Issues = append(triageGroup.Issues, *issue)
 		}
 	}
 
