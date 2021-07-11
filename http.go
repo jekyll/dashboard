@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	gh "github.com/google/go-github/github"
+	gh "github.com/google/go-github/v37/github"
 )
 
 var throttle <-chan time.Time

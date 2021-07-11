@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v37/github"
 )
 
 var pretendTemplateInfo = templateInfo{
@@ -20,7 +20,7 @@ var pretendTemplateInfo = templateInfo{
 					State:   github.String("open"),
 					Locked:  github.Bool(true),
 					Title:   github.String("Update boolean documentation"),
-					Labels:  []github.Label{},
+					Labels:  []*github.Label{},
 					User:    &github.User{Login: github.String("acontributor")},
 					HTMLURL: github.String("https://github.com/jekyll/test/issues/125"),
 					Assignees: []*github.User{

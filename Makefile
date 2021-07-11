@@ -1,13 +1,10 @@
 all: build test
 
-deps:
-	dep ensure
+build:
+	go install ./...
 
-build: deps
-	go install github.com/jekyll/dashboard/...
-
-test: deps
-	go test . ./cmd/... ./triage/...
+test:
+	go test ./...
 
 server: build
 	dashboard -http=localhost:8000
