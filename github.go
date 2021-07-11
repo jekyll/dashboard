@@ -14,8 +14,8 @@ import (
 
 const accessTokenEnvVar = "GITHUB_ACCESS_TOKEN"
 const graphqlQuery = `
-{
-  nodes(ids: %q) {
+query jekyllFetchDashboardData($ids: [ID!]) {
+  nodes(ids: $ids) {
     ... on Repository {
       id
       owner {
@@ -60,6 +60,13 @@ const graphqlQuery = `
             history {
               totalCount
             }
+			statusCheckRollup {
+			  contexts(first: 10) {
+				  nodes {
+					  __typename
+				  }
+			  }
+			}
           }
         }
       }
@@ -111,6 +118,13 @@ type githubGraphQLResults struct {
 						TotalCount int `json:"totalCount"`
 					} `json:"history"`
 				} `json:"target"`
+				StatusCheckRollup struct {
+					Contexts struct {
+						Nodes []struct {
+							TypeName string `json:"__typename"`
+						} `json:"nodes"`
+					} `json:"contexts"`
+				} `json:"statusCheckRollup"`
 			} `json:"defaultBranchRef"`
 		} `json:"nodes"`
 	} `json:"data"`
@@ -120,13 +134,19 @@ var githubGraphQLData = &githubGraphQLResults{}
 var githubClient *gh.Client
 
 type GitHub struct {
-	Owner                     string `json:"owner"`
-	Name                      string `json:"name"`
-	CommitsThisWeek           int    `json:"commits_this_week"`
-	OpenPRs                   int    `json:"open_prs"`
-	OpenIssues                int    `json:"open_issues"`
-	CommitsSinceLatestRelease int    `json:"commits_since_latest_release"`
-	LatestReleaseTag          string `json:"latest_release_tag"`
+	Owner                     string            `json:"owner"`
+	Name                      string            `json:"name"`
+	CommitsThisWeek           int               `json:"commits_this_week"`
+	OpenPRs                   int               `json:"open_prs"`
+	OpenIssues                int               `json:"open_issues"`
+	CommitsSinceLatestRelease int               `json:"commits_since_latest_release"`
+	LatestReleaseTag          string            `json:"latest_release_tag"`
+	LatestCommitCIData        []githubCIContext `json:"latest_commit_ci_data"`
+}
+
+type githubCIContext struct {
+	Name     string `json:"name"`
+	TypeName string `json:"__typename"`
 }
 
 func init() {
@@ -158,7 +178,7 @@ func grabGraphQLDataFromGitHub() {
 			ids = append(ids, project.GlobalRelayID)
 		}
 
-		err := doGraphql(githubClient, fmt.Sprintf(graphqlQuery, ids), githubGraphQLData)
+		err := doGraphql(githubClient, graphqlQuery, map[string]interface{}{"ids": ids}, githubGraphQLData)
 		if err != nil {
 			log.Printf("error fetching graphql: %+v", err)
 		}
@@ -203,6 +223,11 @@ func loadGitHubFromGraphQL(globalRelayID string) *GitHub {
 					}
 					break
 				}
+			}
+			for _, ciContext := range githubProject.DefaultBranchRef.StatusCheckRollup.Contexts.Nodes {
+				githubData.LatestCommitCIData = append(githubData.LatestCommitCIData, githubCIContext{
+					TypeName: ciContext.TypeName,
+				})
 			}
 			break
 		}

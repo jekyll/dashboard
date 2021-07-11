@@ -37,11 +37,11 @@ func get(url string, data interface{}) error {
 	return json.NewDecoder(resp.Body).Decode(data)
 }
 
-func doGraphql(client *gh.Client, query string, output interface{}) error {
+func doGraphql(client *gh.Client, query string, variables map[string]interface{}, output interface{}) error {
 	req, err := githubClient.NewRequest(
 		"POST",
 		"/graphql",
-		map[string]string{"query": query},
+		map[string]interface{}{"query": query, "variables": variables},
 	)
 	if err != nil {
 		return err
