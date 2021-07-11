@@ -24,16 +24,16 @@ var (
       width: 95%;
       margin: 0 auto;
   }
-  .status-good, .travis-status-passed, .appveyor-status-success {
+  .status-good, .ci-status-success {
       background-color: rgba(0, 255, 0, 0.1);
   }
-  .status-tbd, .travis-status-pending {
+  .status-tbd, .ci-status-pending {
       background-color: rgba(255, 255, 0, 0.1);
   }
-  .status-bad, .travis-status-failed, .appveyor-status-failed {
+  .status-bad, .ci-status-failure {
       background-color: rgba(255, 0, 0, 0.1);
   }
-  .status-unknown, .travis-status-errored {
+  .status-unknown, .ci-status-error {
       background-color: rgba(0, 0, 0, 0.1);
   }
   </style>
@@ -71,33 +71,26 @@ var (
     }
     tr.appendChild(rubygemsTD);
 
-    // Travis
-    var travisTD = document.createElement("td");
-    if (info.travis) {
-        var travisA = document.createElement("a");
-        travisA.href = "https://travis-ci.org/" + info.travis.nwo + "/builds/" + info.travis.branch.id;
-        travisA.title = info.travis.nwo + " on TravisCI";
-        travisA.innerText = info.travis.branch.state;
-        travisTD.appendChild(travisA);
-        travisTD.classList.add("travis-status-"+info.travis.branch.state);
+    // CI
+    var ciTD = document.createElement("td");
+    if (info.github.latest_commit_ci_data) {
+        let worstCIState = "success";
+        for (context of info.github.latest_commit_ci_data) {
+            var ciA = document.createElement("a");
+            ciA.href = context.url;
+            ciA.title = context.name;
+            ciA.innerText = ""+context.name+" ("+context.state.toLowerCase()+")";
+            ciTD.appendChild(ciA);
+            ciTD.appendChild(document.createElement("br"));
+            if (worstCIState === "success" && context.state.toLowerCase() !== "neutral") {
+                worstCIState = context.state.toLowerCase();
+            }
+        }
+        ciTD.classList.add("ci-status-"+worstCIState);
     } else {
-        travisTD.innerText = "no info";
+        ciTD.innerText = "no info";
     }
-    tr.appendChild(travisTD);
-
-    // AppVeyor
-    var appVeyorTD = document.createElement("td");
-    if (info.app_veyor) {
-        var appVeyorA = document.createElement("a");
-        appVeyorA.href = info.app_veyor.build.html_url;
-        appVeyorA.title = info.app_veyor.nwo + " on AppVeyorCI";
-        appVeyorA.innerText = info.app_veyor.build.status;
-        appVeyorTD.appendChild(appVeyorA);
-        appVeyorTD.classList.add("appveyor-status-"+info.app_veyor.build.status);
-    } else {
-        appVeyorTD.innerText = "no info";
-    }
-    tr.appendChild(appVeyorTD);
+    tr.appendChild(ciTD);
 
     // Downloads
     var downloadsTD = document.createElement("td");
@@ -190,8 +183,7 @@ var (
     <tr>
       <th>Repo</th>
       <th>Gem</th>
-      <th>Travis</th>
-      <th>AppVeyor</th>
+      <th>CI</th>
       <th>Downloads</th>
       <th>Pull Requests</th>
       <th>Issues</th>
