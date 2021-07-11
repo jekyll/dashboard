@@ -25,7 +25,6 @@ func resetProjectsPeriodically() {
 }
 
 func resetProjects() {
-	githubGraphQLData = &githubGraphQLResults{}
 	for _, p := range defaultProjects {
 		p.reset()
 	}
@@ -38,34 +37,23 @@ type Project struct {
 	Branch        string `json:"branch"`
 	GemName       string `json:"gem_name"`
 
-	Gem      *RubyGem      `json:"gem"`
-	Travis   *TravisReport `json:"travis"`
-	GitHub   *GitHub       `json:"github"`
-	AppVeyor *AppVeyor     `json:"app_veyor"`
-	fetched  bool
+	Gem     *RubyGem `json:"gem"`
+	GitHub  *GitHub  `json:"github"`
+	fetched bool
 }
 
 func (p *Project) fetch() {
 	var wg sync.WaitGroup
-	wg.Add(4)
 
+	wg.Add(1)
 	go func() {
 		p.fetchGitHubData()
 		wg.Done()
 	}()
 
+	wg.Add(1)
 	go func() {
 		p.fetchRubyGemData()
-		wg.Done()
-	}()
-
-	go func() {
-		p.fetchTravisData()
-		wg.Done()
-	}()
-
-	go func() {
-		p.fetchAppVeyorData()
 		wg.Done()
 	}()
 
@@ -82,14 +70,6 @@ func (p *Project) fetchRubyGemData() {
 	p.Gem = <-rubygem(p.GemName)
 }
 
-func (p *Project) fetchTravisData() {
-	if p.Travis != nil {
-		return
-	}
-
-	p.Travis = <-travis(p.Nwo, p.Branch)
-}
-
 func (p *Project) fetchGitHubData() {
 	if p.GitHub != nil {
 		return
@@ -98,20 +78,10 @@ func (p *Project) fetchGitHubData() {
 	p.GitHub = <-github(p.GlobalRelayID)
 }
 
-func (p *Project) fetchAppVeyorData() {
-	if p.AppVeyor != nil {
-		return
-	}
-
-	p.AppVeyor = <-appVeyor(p.Nwo)
-}
-
 func (p *Project) reset() {
 	p.fetched = false
 	p.Gem = nil
-	p.Travis = nil
 	p.GitHub = nil
-	p.AppVeyor = nil
 }
 
 func getProject(name string) *Project {

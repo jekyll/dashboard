@@ -14,8 +14,8 @@ import (
 
 const accessTokenEnvVar = "GITHUB_ACCESS_TOKEN"
 const graphqlQuery = `
-{
-  nodes(ids: %q) {
+query jekyllFetchDashboardData($ids: [ID!]!) {
+  nodes(ids: $ids) {
     ... on Repository {
       id
       owner {
@@ -59,6 +59,26 @@ const graphqlQuery = `
           ... on Commit {
             history {
               totalCount
+			  nodes {
+                statusCheckRollup {
+                  contexts(first: 100) {
+                    nodes {
+                      __typename
+                      ... on CheckRun {
+                        name
+                        status
+                        conclusion
+                        url
+                      }
+                      ... on StatusContext {
+                        description
+                        state
+                        targetUrl
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -109,6 +129,26 @@ type githubGraphQLResults struct {
 				Target struct {
 					History struct {
 						TotalCount int `json:"totalCount"`
+						Nodes      []struct {
+							StatusCheckRollup struct {
+								Contexts struct {
+									Nodes []struct {
+										TypeName string `json:"__typename"`
+
+										// On CheckRun
+										Name       string `json:"name"`
+										Status     string `json:"status"`
+										Conclusion string `json:"conclusion"`
+										URL        string `json:"url"`
+
+										// On StatusContext
+										Description string `json:"description"`
+										State       string `json:"state"`
+										TargetURL   string `json:"targetUrl"`
+									} `json:"nodes"`
+								} `json:"contexts"`
+							} `json:"statusCheckRollup"`
+						} `json:"nodes"`
 					} `json:"history"`
 				} `json:"target"`
 			} `json:"defaultBranchRef"`
@@ -116,17 +156,24 @@ type githubGraphQLResults struct {
 	} `json:"data"`
 }
 
-var githubGraphQLData = &githubGraphQLResults{}
 var githubClient *gh.Client
 
 type GitHub struct {
-	Owner                     string `json:"owner"`
-	Name                      string `json:"name"`
-	CommitsThisWeek           int    `json:"commits_this_week"`
-	OpenPRs                   int    `json:"open_prs"`
-	OpenIssues                int    `json:"open_issues"`
-	CommitsSinceLatestRelease int    `json:"commits_since_latest_release"`
-	LatestReleaseTag          string `json:"latest_release_tag"`
+	Owner                     string            `json:"owner"`
+	Name                      string            `json:"name"`
+	CommitsThisWeek           int               `json:"commits_this_week"`
+	OpenPRs                   int               `json:"open_prs"`
+	OpenIssues                int               `json:"open_issues"`
+	CommitsSinceLatestRelease int               `json:"commits_since_latest_release"`
+	LatestReleaseTag          string            `json:"latest_release_tag"`
+	LatestCommitCIData        []githubCIContext `json:"latest_commit_ci_data"`
+}
+
+type githubCIContext struct {
+	Name     string `json:"name"`
+	State    string `json:"state"`
+	URL      string `json:"url"`
+	TypeName string `json:"__typename"`
 }
 
 func init() {
@@ -151,20 +198,6 @@ func newGitHubClient() *gh.Client {
 	}
 }
 
-func grabGraphQLDataFromGitHub() {
-	githubGraphQLData.once.Do(func() {
-		ids := []string{}
-		for _, project := range defaultProjects {
-			ids = append(ids, project.GlobalRelayID)
-		}
-
-		err := doGraphql(githubClient, fmt.Sprintf(graphqlQuery, ids), githubGraphQLData)
-		if err != nil {
-			log.Printf("error fetching graphql: %+v", err)
-		}
-	})
-}
-
 func github(globalRelayID string) chan *GitHub {
 	githubChan := make(chan *GitHub, 1)
 
@@ -183,9 +216,13 @@ func github(globalRelayID string) chan *GitHub {
 }
 
 func loadGitHubFromGraphQL(globalRelayID string) *GitHub {
+	githubGraphQLData := &githubGraphQLResults{}
 	githubData := &GitHub{}
 
-	grabGraphQLDataFromGitHub()
+	err := doGraphql(githubClient, graphqlQuery, map[string]interface{}{"ids": []string{globalRelayID}}, githubGraphQLData)
+	if err != nil {
+		log.Printf("error fetching graphql: %+v", err)
+	}
 
 	for _, githubProject := range githubGraphQLData.Data.Nodes {
 		if githubProject.GlobalRelayID == globalRelayID {
@@ -204,6 +241,33 @@ func loadGitHubFromGraphQL(globalRelayID string) *GitHub {
 					break
 				}
 			}
+
+			index := 0
+			if len(githubProject.DefaultBranchRef.Target.History.Nodes[1].StatusCheckRollup.Contexts.Nodes) > len(githubProject.DefaultBranchRef.Target.History.Nodes[0].StatusCheckRollup.Contexts.Nodes) {
+				index = 1
+			}
+			for _, ciContext := range githubProject.DefaultBranchRef.Target.History.Nodes[index].StatusCheckRollup.Contexts.Nodes {
+				var name, state, url string
+				if ciContext.TypeName == "CheckRun" {
+					name = ciContext.Name
+					url = ciContext.URL
+					if ciContext.Status == "pending" {
+						state = "pending"
+					} else {
+						state = ciContext.Conclusion
+					}
+				} else {
+					name = ciContext.Description
+					state = ciContext.State
+					url = ciContext.TargetURL
+				}
+				githubData.LatestCommitCIData = append(githubData.LatestCommitCIData, githubCIContext{
+					TypeName: ciContext.TypeName,
+					Name:     name,
+					State:    state,
+					URL:      url,
+				})
+			}
 			break
 		}
 	}
@@ -212,7 +276,6 @@ func loadGitHubFromGraphQL(globalRelayID string) *GitHub {
 }
 
 func prefillAllProjectsFromGitHub() {
-	grabGraphQLDataFromGitHub()
 	var wg sync.WaitGroup
 	for _, project := range getProjects() {
 		wg.Add(1)
