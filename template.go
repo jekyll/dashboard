@@ -20,18 +20,23 @@ var (
   <link crossorigin="anonymous" media="all" integrity="sha512-KY4UdRxVuu2IR/1+5BfVjOAci/NTaEiyg0NelgnXevWPbhUU4YLcpNeWyVh6kVHzLwOF75XT+iW9BwA4zURVaw==" rel="stylesheet" href="https://github.githubassets.com/assets/github-af00f93db15422dc4aa5207a2f2ee52c.css" />
   <title>Dashboard</title>
   <style type="text/css">
-  caption {
-      margin: 20px 0 30px;
-      padding-bottom: 5px;
-      font-size: 1.5em;
-      font-weight: 600;
-      text-align: center;
-      text-transform: capitalize;
-      border-bottom: 1px solid #eee;
+  .pagehead {
+      margin-bottom: 60px;
+      padding: 30px 0;
+  }
+  .container-sm {
+      width: 300px;
+  }
+  .avatar-container {
+      margin-right: 18px;
   }
   .markdown-body {
       width: 95%;
       margin: 0 auto;
+  }
+  .markdown-body .h2 {
+      padding-bottom: 0;
+      border-bottom: none;
   }
   .markdown-body table {
       display: table;
@@ -47,6 +52,12 @@ var (
   .ci-status a {
       display: block;
       padding: 6px 12px;
+  }
+  .ci-status a:first-child {
+      margin-top: -6px;
+  }
+  .ci-status a:last-child {
+      margin-bottom: -6px;
   }
   .status-good, .success {
       background-color: rgba(0, 255, 0, 0.1);
@@ -64,7 +75,7 @@ var (
       background-color: rgba(255, 0, 0, 0.1);
   }
   .ci-status.failure a:hover {
-      background-color: rgba(240, 210, 210, 0.1);
+      background-color: rgba(240, 5, 5, 0.1);
   }
   .status-unknown, .error {
       background-color: rgba(0, 0, 0, 0.1);
@@ -244,14 +255,25 @@ var (
 </head>
 <body>
 <div class="markdown-body">
-
+<header class="pagehead">
+  <div class="container-sm clearfix">
+    <div class="d-flex flex-wrap flex-md-items-center">
+      <div class="avatar-container">
+        <img itemprop="image" class="avatar" src="https://avatars.githubusercontent.com/u/3083652?s=200&amp;v=4" width="60" height="60" alt="jekyll@github.com">
+      </div>
+      <div class="flex-1">
+        <h1 class="h2 lh-condensed">Dashboard</h1>
+        <div><small>Jekyll Organization at a glance</small></div>
+      </div>
+    </div>
+  </div>
+</header>
 <table>
-  <caption>Jekyll At-a-Glance Dashboard</caption>
   <thead>
     <tr>
-      <th>Repo</th>
-      <th>Gem</th>
-      <th>CI</th>
+      <th>Repository</th>
+      <th>Gem Version</th>
+      <th>Continuous Integration</th>
       <th>Downloads</th>
       <th>Pull Requests</th>
       <th>Issues</th>
