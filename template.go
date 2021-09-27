@@ -20,21 +20,100 @@ var (
   <link crossorigin="anonymous" media="all" integrity="sha512-KY4UdRxVuu2IR/1+5BfVjOAci/NTaEiyg0NelgnXevWPbhUU4YLcpNeWyVh6kVHzLwOF75XT+iW9BwA4zURVaw==" rel="stylesheet" href="https://github.githubassets.com/assets/github-af00f93db15422dc4aa5207a2f2ee52c.css" />
   <title>Dashboard</title>
   <style type="text/css">
+  .pagehead {
+      margin-bottom: 60px;
+      padding: 30px 0;
+  }
+  .container-sm {
+      width: 300px;
+  }
+  .avatar-container {
+      margin-right: 18px;
+  }
   .markdown-body {
       width: 95%;
       margin: 0 auto;
   }
-  .status-good, .ci-status-success {
+  .markdown-body .h2 {
+      padding-bottom: 0;
+      border-bottom: none;
+  }
+  .markdown-body table {
+      display: table;
+      width: auto;
+      margin: 0 auto;
+  }
+  .markdown-body table td {
+      text-align: center;
+  }
+  .ci-status {
+      padding: 6px 0 !important;
+  }
+  .ci-status a {
+      display: block;
+      padding: 6px 12px;
+  }
+  .ci-status a:first-child {
+      margin-top: -6px;
+  }
+  .ci-status a:last-child {
+      margin-bottom: -6px;
+  }
+  .status-good, .success {
       background-color: rgba(0, 255, 0, 0.1);
   }
-  .status-tbd, .ci-status-pending {
+  .ci-status.success a:hover {
+      background-color: rgba(24, 200, 24, 0.1);
+  }
+  .status-tbd, .pending {
       background-color: rgba(255, 255, 0, 0.1);
   }
-  .status-bad, .ci-status-failure {
+  .ci-status.pending a:hover {
+      background-color: rgba(210, 210, 180, 0.1);
+  }
+  .status-bad, .failure {
       background-color: rgba(255, 0, 0, 0.1);
   }
-  .status-unknown, .ci-status-error {
+  .ci-status.failure a:hover {
+      background-color: rgba(240, 5, 5, 0.1);
+  }
+  .status-unknown, .error {
       background-color: rgba(0, 0, 0, 0.1);
+  }
+  .ci-status.error a:hover {
+      background-color: rgba(140, 140, 140, 0.1);
+  }
+  footer {
+      margin-top: 30px;
+      padding: 15px 0 30px;
+      border-top: 1px solid #eee;
+  }
+  .inline-block {
+      display: inline-block;
+  }
+  .footer-note, .reset-form-container {
+      margin: 0 auto;
+      padding-bottom: 12px;
+  }
+  .footer-note {
+      max-width: 418px;
+  }
+  .footer-note div:first-child {
+      padding: 12px 15px;
+      text-align: center;
+      line-height: 1.4;
+      font-weight: 600;
+      border-right: 1px solid #eee;
+  }
+  .icon {
+      padding: 12px 0 0 12px;
+      min-width: 48px;
+  }
+  .reset-form-container {
+      max-width: 250px;
+  }
+  .reset-form-container [type=submit] {
+      margin-left: 4px;
   }
   </style>
   <script type="application/javascript">
@@ -74,6 +153,7 @@ var (
     // CI
     var ciTD = document.createElement("td");
     if (info.github.latest_commit_ci_data) {
+        ciTD.className = "ci-status"
         let worstCIState = "success";
         for (context of info.github.latest_commit_ci_data) {
             var ciA = document.createElement("a");
@@ -81,12 +161,11 @@ var (
             ciA.title = context.name;
             ciA.innerText = ""+context.name+" ("+context.state.toLowerCase()+")";
             ciTD.appendChild(ciA);
-            ciTD.appendChild(document.createElement("br"));
             if (worstCIState === "success" && context.state.toLowerCase() !== "neutral") {
                 worstCIState = context.state.toLowerCase();
             }
         }
-        ciTD.classList.add("ci-status-"+worstCIState);
+        ciTD.classList.add(worstCIState);
     } else {
         ciTD.innerText = "no info";
     }
@@ -176,14 +255,25 @@ var (
 </head>
 <body>
 <div class="markdown-body">
-
+<header class="pagehead">
+  <div class="container-sm clearfix">
+    <div class="d-flex flex-wrap flex-md-items-center">
+      <div class="avatar-container">
+        <img itemprop="image" class="avatar" src="https://avatars.githubusercontent.com/u/3083652?s=200&amp;v=4" width="60" height="60" alt="jekyll@github.com">
+      </div>
+      <div class="flex-1">
+        <h1 class="h2 lh-condensed">Dashboard</h1>
+        <div><small>Jekyll Organization at a glance</small></div>
+      </div>
+    </div>
+  </div>
+</header>
 <table>
-  <caption>Jekyll At-a-Glance Dashboard</caption>
   <thead>
     <tr>
-      <th>Repo</th>
-      <th>Gem</th>
-      <th>CI</th>
+      <th>Repository</th>
+      <th>Gem Version</th>
+      <th>Continuous Integration</th>
       <th>Downloads</th>
       <th>Pull Requests</th>
       <th>Issues</th>
@@ -196,17 +286,40 @@ var (
     {{end}}
   </tbody>
 </table>
-
-<div>
-	<strong>Commits are as of this week. Issues and pull requests are total open.</strong>
-	<a href="https://github.com/jekyll/dashboard">Source Code</a>.
-</div>
-
-<p>
-	Look wrong? <form action="/reset.json" method="post"><input type="Submit" value="Reset the cache."></form>
-</p>
-
-</div>
+<footer>
+  <div class="footer-note">
+    <div class="inline-block">
+      Commits are as of this week.<br>Issues and pull requests are total open.
+    </div>
+    <div class="inline-block icon">
+      <a href="https://github.com/jekyll/dashboard" title="Source Code at GitHub">
+        <svg viewBox="0 0 16 16">
+          <path
+            fill="#828282"
+            d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,
+               7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,
+               0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,
+               0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,
+               0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,
+               10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,
+               3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,
+               0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,
+               0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,
+               3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,
+               2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,
+               3.906,12.285,0.431,7.999,0.431z"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div class="reset-form-container">
+    Look wrong?
+    <form class="inline-block" action="/reset.json" method="post">
+      <input type="Submit" value="Reset the cache.">
+    </form>
+  </div>
+</footer>
 </body>
 </html>
 `))
