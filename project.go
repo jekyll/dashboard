@@ -36,6 +36,7 @@ type Project struct {
 	Nwo           string `json:"nwo"`
 	Branch        string `json:"branch"`
 	GemName       string `json:"gem_name"`
+	Stars         int    `json:"star_count"`
 
 	Gem     *RubyGem `json:"gem"`
 	GitHub  *GitHub  `json:"github"`
