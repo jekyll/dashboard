@@ -74,13 +74,6 @@ var defaultProjects = []*Project{
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjA1Mzk5NA==",
 	},
 	{
-		Name:          "jekyll-help",
-		Nwo:           "jekyll/jekyll-help",
-		Branch:        "master",
-		GemName:       "jekyll-help",
-		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxODE5MzgzNA==",
-	},
-	{
 		Name:          "jekyll-avatar",
 		Nwo:           "jekyll/jekyll-avatar",
 		Branch:        "main",

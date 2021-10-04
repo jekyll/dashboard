@@ -56,7 +56,7 @@ func main() {
 	repoInfos := make([]*dashboard.Project, 0, len(repositories))
 
 	for _, repository := range repositories {
-		if !relevantProject(repository.GetName()) {
+		if !relevantProject(repository.GetName()) || repository.GetArchived() {
 			continue
 		}
 		info := &dashboard.Project{
