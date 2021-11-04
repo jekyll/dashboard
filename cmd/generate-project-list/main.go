@@ -44,6 +44,15 @@ func relevantProject(name string) bool {
 	return strings.HasPrefix(name, "jekyll") || additionalProjectNames[name]
 }
 
+func projectGemName(name string) string {
+	switch name {
+	case "github-metadata":
+		return "jekyll-github-metadata"
+	default:
+		return name
+	}
+}
+
 func main() {
 	flag.Parse()
 
@@ -63,7 +72,7 @@ func main() {
 			Name:          repository.GetName(),
 			Nwo:           repository.GetFullName(),
 			Branch:        repository.GetDefaultBranch(),
-			GemName:       repository.GetName(),
+			GemName:       projectGemName(repository.GetName()),
 			GlobalRelayID: repository.GetNodeID(),
 			Stars:         repository.GetStargazersCount(),
 		}
