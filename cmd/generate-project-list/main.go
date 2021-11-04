@@ -34,6 +34,10 @@ type templateData struct {
 	Repositories []*dashboard.Project
 }
 
+var gemNames = map[string]string{
+	"github-metadata": "jekyll-github-metadata",
+}
+
 var additionalProjectNames = map[string]bool{
 	"classifier-reborn": true,
 	"directory":         true,
@@ -42,6 +46,14 @@ var additionalProjectNames = map[string]bool{
 
 func relevantProject(name string) bool {
 	return strings.HasPrefix(name, "jekyll") || additionalProjectNames[name]
+}
+
+func projectGemName(name string) string {
+	if gemName, exist := gemNames[name]; exist {
+		return gemName
+	} else {
+		return name
+	}
 }
 
 func main() {
@@ -63,7 +75,7 @@ func main() {
 			Name:          repository.GetName(),
 			Nwo:           repository.GetFullName(),
 			Branch:        repository.GetDefaultBranch(),
-			GemName:       repository.GetName(),
+			GemName:       projectGemName(repository.GetName()),
 			GlobalRelayID: repository.GetNodeID(),
 			Stars:         repository.GetStargazersCount(),
 		}

@@ -63,7 +63,7 @@ var defaultProjects = []*Project{
 		Name:          "github-metadata",
 		Nwo:           "jekyll/github-metadata",
 		Branch:        "master",
-		GemName:       "github-metadata",
+		GemName:       "jekyll-github-metadata",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkyNDA4ODIxNA==",
 	},
 	{
