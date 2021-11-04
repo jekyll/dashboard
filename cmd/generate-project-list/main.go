@@ -44,19 +44,8 @@ var additionalProjectNames = map[string]bool{
 	"minima":            true,
 }
 
-var notMaintainedProjectNames = map[string]bool{
-	"jekyll-coffeescript":      true,
-	"jekyll-opal":              true,
-	"jekyll-paginate":          true,
-	"jekyll-textile-converter": true,
-}
-
-func maintainedProject(name string) bool {
-	return !(strings.HasPrefix(name, "jekyll-test") || notMaintainedProjectNames[name])
-}
-
 func relevantProject(name string) bool {
-	return strings.HasPrefix(name, "jekyll-") && maintainedProject(name) || additionalProjectNames[name]
+	return strings.HasPrefix(name, "jekyll-") && !strings.HasPrefix(name, "jekyll-test") || additionalProjectNames[name]
 }
 
 func main() {
@@ -64,7 +53,7 @@ func main() {
 
 	client := github.NewClient(http.DefaultClient)
 	opt := &github.RepositoryListByOrgOptions{
-		ListOptions: github.ListOptions{PerPage: 60},
+		ListOptions: github.ListOptions{PerPage: 100},
 	}
 
 	repositories, _, err := client.Repositories.ListByOrg(context.Background(), "jekyll", opt)
@@ -76,7 +65,7 @@ func main() {
 
 	for _, repository := range repositories {
 		name := repository.GetName()
-		if !relevantProject(name) || repository.GetArchived() {
+		if !relevantProject(name) || repository.GetArchived() || repository.GetPrivate() {
 			continue
 		}
 		info := &dashboard.Project{

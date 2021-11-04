@@ -123,6 +123,13 @@ var defaultProjects = []*Project{
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjI0MzU3MA==",
 	},
 	{
+		Name:          "jekyll-paginate",
+		Nwo:           "jekyll/jekyll-paginate",
+		Branch:        "master",
+		GemName:       "jekyll-paginate",
+		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkyMDE5MjY4Ng==",
+	},
+	{
 		Name:          "jekyll-watch",
 		Nwo:           "jekyll/jekyll-watch",
 		Branch:        "master",
@@ -135,6 +142,20 @@ var defaultProjects = []*Project{
 		Branch:        "main",
 		GemName:       "jekyll-avatar",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnk0OTM3ODE0Ng==",
+	},
+	{
+		Name:          "jekyll-coffeescript",
+		Nwo:           "jekyll/jekyll-coffeescript",
+		Branch:        "master",
+		GemName:       "jekyll-coffeescript",
+		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjI0MjcxOA==",
+	},
+	{
+		Name:          "jekyll-opal",
+		Nwo:           "jekyll/jekyll-opal",
+		Branch:        "master",
+		GemName:       "jekyll-opal",
+		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkyMDg3MjQwMw==",
 	},
 	{
 		Name:          "jekyll-docs",
@@ -156,5 +177,12 @@ var defaultProjects = []*Project{
 		Branch:        "master",
 		GemName:       "jekyll-commonmark",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnk0ODQwMTA3Mw==",
+	},
+	{
+		Name:          "jekyll-textile-converter",
+		Nwo:           "jekyll/jekyll-textile-converter",
+		Branch:        "master",
+		GemName:       "jekyll-textile-converter",
+		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkyOTQwMzM1Ng==",
 	},
 }
