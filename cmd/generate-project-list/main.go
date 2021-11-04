@@ -34,10 +34,6 @@ type templateData struct {
 	Repositories []*dashboard.Project
 }
 
-var gemNames = map[string]string{
-	"github-metadata": "jekyll-github-metadata",
-}
-
 var additionalProjectNames = map[string]bool{
 	"classifier-reborn": true,
 	"directory":         true,
@@ -49,9 +45,10 @@ func relevantProject(name string) bool {
 }
 
 func projectGemName(name string) string {
-	if gemName, exist := gemNames[name]; exist {
-		return gemName
-	} else {
+	switch name {
+	case "github-metadata":
+		return "jekyll-github-metadata"
+	default:
 		return name
 	}
 }
