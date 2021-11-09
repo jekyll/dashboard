@@ -38,10 +38,14 @@ var additionalProjectNames = map[string]bool{
 	"classifier-reborn": true,
 	"directory":         true,
 	"github-metadata":   true,
+	"jekyll":            true,
+	"jemoji":            true,
+	"mercenary":         true,
+	"minima":            true,
 }
 
 func relevantProject(name string) bool {
-	return strings.HasPrefix(name, "jekyll") || additionalProjectNames[name]
+	return strings.HasPrefix(name, "jekyll-") && !strings.HasPrefix(name, "jekyll-test") || additionalProjectNames[name]
 }
 
 func projectGemName(name string) string {
@@ -57,7 +61,11 @@ func main() {
 	flag.Parse()
 
 	client := github.NewClient(http.DefaultClient)
-	repositories, _, err := client.Repositories.List(context.Background(), "jekyll", &github.RepositoryListOptions{})
+	opt := &github.RepositoryListByOrgOptions{
+		ListOptions: github.ListOptions{PerPage: 100},
+	}
+
+	repositories, _, err := client.Repositories.ListByOrg(context.Background(), "jekyll", opt)
 	if err != nil {
 		log.Fatalf("unable to list repositories: %v", err)
 	}
@@ -65,7 +73,8 @@ func main() {
 	repoInfos := make([]*dashboard.Project, 0, len(repositories))
 
 	for _, repository := range repositories {
-		if !relevantProject(repository.GetName()) || repository.GetArchived() {
+		name := repository.GetName()
+		if !relevantProject(name) || repository.GetArchived() || repository.GetPrivate() {
 			continue
 		}
 		info := &dashboard.Project{
