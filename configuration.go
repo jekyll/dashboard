@@ -109,18 +109,18 @@ var defaultProjects = []*Project{
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjA1Mzk5NA==",
 	},
 	{
-		Name:          "mercenary",
-		Nwo:           "jekyll/mercenary",
-		Branch:        "master",
-		GemName:       "mercenary",
-		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNDE4MzUwNA==",
-	},
-	{
 		Name:          "jekyll-sass-converter",
 		Nwo:           "jekyll/jekyll-sass-converter",
 		Branch:        "master",
 		GemName:       "jekyll-sass-converter",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjI0MzU3MA==",
+	},
+	{
+		Name:          "mercenary",
+		Nwo:           "jekyll/mercenary",
+		Branch:        "master",
+		GemName:       "mercenary",
+		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNDE4MzUwNA==",
 	},
 	{
 		Name:          "jekyll-paginate",
