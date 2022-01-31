@@ -168,7 +168,7 @@ var defaultProjects = []*Project{
 		Name:          "directory",
 		Nwo:           "jekyll/directory",
 		Branch:        "master",
-		GemName:       "directory",
+		GemName:       "",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxMTI2NTcwOQ==",
 	},
 	{

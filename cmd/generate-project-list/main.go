@@ -52,6 +52,8 @@ func projectGemName(name string) string {
 	switch name {
 	case "github-metadata":
 		return "jekyll-github-metadata"
+	case "directory":
+		return ""
 	default:
 		return name
 	}
