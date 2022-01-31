@@ -46,6 +46,21 @@ var (
   .markdown-body table td {
       text-align: center;
   }
+  #jekyll_org th {
+      cursor: pointer;
+  }
+  #jekyll_org th:after {
+      margin-left: 9px;
+      vertical-align: 1px;
+      font-size: 0.6em;
+      color: #bfbfbf;
+  }
+  #jekyll_org th.sorted-ascending:after {
+      content: "\25B2";
+  }
+  #jekyll_org th.sorted-descending:after {
+      content: "\25BC";
+  }
   .ci-status {
       padding: 6px 0 !important;
   }
@@ -268,7 +283,7 @@ var (
     </div>
   </div>
 </header>
-<table>
+<table id="jekyll_org">
   <thead>
     <tr>
       <th>Repository</th>
@@ -320,6 +335,89 @@ var (
     </form>
   </div>
 </footer>
+<script>
+  const table = document.getElementById("jekyll_org");
+  const rows = table.rows;
+  const header_cells = Array.from(rows[0].cells);
+  const numericCells = ["Downloads", "Pull Requests", "Issues", "Unreleased commits"];
+
+  header_cells.forEach((cell, idx) => {
+    const type = numericCells.includes(cell.innerText) ? "Numeric" : "String";
+    cell.addEventListener("click", function () {
+      let switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      switching = true;
+
+      dir = "ascending";
+
+      while (switching) {
+        switching = false;
+
+        // Loop through all table rows (except the first, which contains table headers).
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+
+          // Get two elements for comparison, one from current row and one from the next.
+          x = rows[i].getElementsByTagName("td")[idx];
+          y = rows[i + 1].getElementsByTagName("td")[idx];
+
+          // Check if the two rows should switch place, based on the direction, "ascending"
+          // or "descending".
+          if (dir == "ascending") {
+            if (type == "Numeric") {
+              if (parseInt(x.innerText) > parseInt(y.innerText)) {
+                // If so, mark as a switch and break the loop.
+                shouldSwitch = true;
+                break;
+              }
+            } else {
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop.
+                shouldSwitch = true;
+                break;
+              }
+            }
+          } else if (dir == "descending") {
+            if (type == "Numeric") {
+              if (parseInt(x.innerText) < parseInt(y.innerText)) {
+                // If so, mark as a switch and break the loop.
+                shouldSwitch = true;
+                break;
+              }
+            } else {
+              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop.
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+        }
+
+        if (shouldSwitch) {
+          // If a switch has been marked, make the switch and mark that a switch has been done.
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1.
+          switchcount ++;
+        } else {
+          // If no switching has been done AND the direction is "ascending", set the direction
+          // to "descending" and run the while loop again.
+          if (switchcount == 0 && dir == "ascending") {
+            dir = "descending";
+            switching = true;
+          }
+        }
+      }
+
+      // Ensure only the current header cell is assigned designed classname AND reset assigned
+      // classname attribute to header-cell based on direction.
+      header_cells.forEach(cell => cell.classList.contains("sorted-ascending") ?
+        cell.classList.remove("sorted-ascending") : cell.classList.remove("sorted-descending")
+      );
+      cell.classList.add("sorted-" + dir);
+    });
+  })
+</script>
 </body>
 </html>
 `))
