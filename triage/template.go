@@ -96,7 +96,7 @@ Filter by using the <b>type</b> (issue/pr/all), <b>label</b> (see below), or <b>
 `
 )
 
-func init() {
+func initTemplates() {
 	var err error
 	triageTmpl, err = template.New("triage").Funcs(template.FuncMap{
 		"daysAgo":   daysAgo,

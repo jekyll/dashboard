@@ -176,10 +176,6 @@ type githubCIContext struct {
 	TypeName string `json:"__typename"`
 }
 
-func init() {
-	githubClient = newGitHubClient()
-}
-
 func gitHubToken() string {
 	return os.Getenv(accessTokenEnvVar)
 }

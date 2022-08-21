@@ -8,7 +8,7 @@ import (
 
 var defaultProjectMap = sync.Map{}
 
-func init() {
+func initProjects() {
 	for _, p := range defaultProjects {
 		defaultProjectMap.Store(p.Name, p)
 	}

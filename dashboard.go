@@ -43,6 +43,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func Listen(bindAddr string) error {
+	// Replace init()'s with explicit inline initializations
+	githubClient = newGitHubClient()
+	initProjects()
+
 	http.HandleFunc("/reset.json", reset)
 	http.HandleFunc("/show.json", show)
 	http.Handle("/triage", triage.New(githubClient, []string{"documentation", "bug", "enhancement"}))

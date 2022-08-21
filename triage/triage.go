@@ -5,12 +5,16 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/google/go-github/v37/github"
 )
 
+var once sync.Once
+
 func New(client *github.Client, labelsofInterest []string) *Triager {
+	once.Do(initTemplates)
 	return &Triager{
 		Client:           client,
 		LabelsOfInterest: labelsofInterest,
