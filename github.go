@@ -295,6 +295,7 @@ func commitsSinceLatestRelease(owner, repo, latestReleaseTagName string) int {
 			context.Background(),
 			owner, repo,
 			latestReleaseTagName, "master",
+			&gh.ListOptions{PerPage: 1}, // limit results so it's faster?
 		)
 	})
 	if err != nil {
