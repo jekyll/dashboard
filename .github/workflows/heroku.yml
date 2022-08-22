@@ -3,7 +3,7 @@ on:
     branches:
       - main
       - deploy-with-actions
-
+name: Heroku
 jobs:
   custom-deploy:
     runs-on: ubuntu-latest
