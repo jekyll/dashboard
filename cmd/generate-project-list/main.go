@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/google/go-github/v46/github"
 	"github.com/jekyll/dashboard"
@@ -17,6 +18,7 @@ import (
 
 var tmpl = template.Must(template.New(`configuration.go`).Parse(`//go:generate go run ./cmd/generate-project-list
 // THIS FILE IS AUTO-GENERATED WITH 'go generate .'
+// LAST UPDATED {{.Now.Format "Jan 02, 2006 15:04:05 UTC" }}
 package dashboard
 
 var defaultProjects = []*Project{{"{"}}{{range .Repositories}}
@@ -32,6 +34,7 @@ var defaultProjects = []*Project{{"{"}}{{range .Repositories}}
 
 type templateData struct {
 	Repositories []*dashboard.Project
+	Now          time.Time
 }
 
 var additionalProjectNames = map[string]bool{
@@ -96,7 +99,7 @@ func main() {
 	})
 
 	s := &strings.Builder{}
-	err = tmpl.Execute(s, templateData{Repositories: repoInfos})
+	err = tmpl.Execute(s, templateData{Repositories: repoInfos, Now: time.Now().UTC()})
 	if err != nil {
 		log.Fatalf("unable to execute template: %v", err)
 	}

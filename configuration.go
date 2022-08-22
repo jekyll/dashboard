@@ -1,5 +1,6 @@
 //go:generate go run ./cmd/generate-project-list
 // THIS FILE IS AUTO-GENERATED WITH 'go generate .'
+// LAST UPDATED Aug 22, 2022 01:17:04 UTC
 package dashboard
 
 var defaultProjects = []*Project{
