@@ -11,7 +11,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/google/go-github/v37/github"
+	"github.com/google/go-github/v46/github"
 	"github.com/jekyll/dashboard"
 )
 

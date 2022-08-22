@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	gh "github.com/google/go-github/v37/github"
+	gh "github.com/google/go-github/v46/github"
 )
 
 var allowRequestEvery = time.Second / 30
