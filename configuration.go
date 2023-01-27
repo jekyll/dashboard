@@ -1,6 +1,6 @@
 //go:generate go run ./cmd/generate-project-list
 // THIS FILE IS AUTO-GENERATED WITH 'go generate .'
-// LAST UPDATED Aug 22, 2022 01:17:04 UTC
+// LAST UPDATED Jan 27, 2023 21:24:49 UTC
 package dashboard
 
 var defaultProjects = []*Project{
@@ -105,7 +105,7 @@ var defaultProjects = []*Project{
 	{
 		Name:          "jekyll-mentions",
 		Nwo:           "jekyll/jekyll-mentions",
-		Branch:        "master",
+		Branch:        "main",
 		GemName:       "jekyll-mentions",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNjA1Mzk5NA==",
 	},
@@ -119,7 +119,7 @@ var defaultProjects = []*Project{
 	{
 		Name:          "mercenary",
 		Nwo:           "jekyll/mercenary",
-		Branch:        "master",
+		Branch:        "main",
 		GemName:       "mercenary",
 		GlobalRelayID: "MDEwOlJlcG9zaXRvcnkxNDE4MzUwNA==",
 	},
