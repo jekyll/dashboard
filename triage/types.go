@@ -22,5 +22,5 @@ func (g Issues) Swap(i, j int) {
 	g[i], g[j] = g[j], g[i]
 }
 func (g Issues) Less(i, j int) bool {
-	return g[i].GetCreatedAt().Before(g[j].GetCreatedAt())
+	return g[i].GetCreatedAt().Before(g[j].GetCreatedAt().Time)
 }
