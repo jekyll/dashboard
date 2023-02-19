@@ -3,7 +3,7 @@ package triage
 import (
 	"time"
 
-	"github.com/google/go-github/v46/github"
+	"github.com/google/go-github/v50/github"
 )
 
 type IssueGrouping struct {
