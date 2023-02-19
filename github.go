@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	gh "github.com/google/go-github/v46/github"
+	gh "github.com/google/go-github/v50/github"
 	"golang.org/x/oauth2"
 )
 
