@@ -1,8 +1,8 @@
-// +heroku goVersion 1.19
+// +heroku goVersion 1.23
 
 module github.com/jekyll/dashboard
 
-go 1.19
+go 1.23
 
 require (
 	github.com/google/go-github/v50 v50.2.0
