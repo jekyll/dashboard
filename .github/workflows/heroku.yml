@@ -12,6 +12,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # fetch full clone
+      - name: Install heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
       - name: Heroku login credentials
         run: |
           cat > ~/.netrc <<EOF
