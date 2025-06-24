@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v73/github"
 )
 
 var pretendTemplateInfo = templateInfo{
